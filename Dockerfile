@@ -23,4 +23,4 @@ COPY . .
 
 # 5. Comando para iniciar a API (ajuste o nome do arquivo se for diferente)
 # IMPORTANTE: No Render, a porta deve ser a variável de ambiente $PORT ou 80
-CMD ["uvicorn", "ocr_api:app", "--host", "0.0.0.0", "--port", "10000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "10000"]

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import Response, JSONResponse
 from pathlib import Path
 import shutil
@@ -6,9 +6,10 @@ import uuid
 import os
 
 # =====================================================
-# MUDANÇA 1: Importamos a nova função única do extrator
+# IMPORTAÇÕES DOS EXTRATORES
 # =====================================================
-from extractor import process_copel_bill
+from extractor import process_copel_bill  # Lê PDF Digital
+from extractor_ocr import process_image_bill  # Lê Foto (OCR)
 from jinja2 import Environment, FileSystemLoader
 
 # =====================================================
@@ -23,7 +24,7 @@ except Exception:
 # =====================================================
 # APP
 # =====================================================
-app = FastAPI()
+app = FastAPI(title="API Solarx - Faturas & OCR")
 
 # =====================================================
 # PASTAS TEMPORÁRIAS
@@ -31,6 +32,10 @@ app = FastAPI()
 BASE_DIR = Path(__file__).parent
 TEMP_DIR = BASE_DIR / "temp"
 TEMP_DIR.mkdir(exist_ok=True)
+
+# Pasta específica para OCR
+TEMP_OCR_DIR = BASE_DIR / "temp_ocr"
+TEMP_OCR_DIR.mkdir(exist_ok=True)
 
 # =====================================================
 # TEMPLATE ENGINE
@@ -78,42 +83,26 @@ def calcular_economia(valor_fatura: float, percentual: float = 0.10):
 
 
 # =====================================================
-# ROTA ÚNICA — GERA PDF FINAL
+# ROTA 1: GERA PROPOSTA (PDF DIGITAL)
 # =====================================================
 @app.post("/gerar-proposta")
 async def gerar_proposta(
         pdf: UploadFile = File(...),
-        senha: str = Form(None)  # Senha opcional
+        senha: str = Form(None)
 ):
-    # Gera um nome único para o arquivo
     temp_pdf = TEMP_DIR / f"{uuid.uuid4()}.pdf"
 
-    # Salva o arquivo no disco
     with open(temp_pdf, "wb") as f:
         shutil.copyfileobj(pdf.file, f)
 
     try:
-        # =====================================================
-        # MUDANÇA 2: Nova Lógica de Extração
-        # =====================================================
-        # O novo extrator faz tudo sozinho: abre, lê e estrutura.
-        # Ele retorna um dicionário completo.
         resultado_completo = process_copel_bill(temp_pdf)
-
-        # Acessamos a parte que interessa: 'dados_extraidos'
         data = resultado_completo["dados_extraidos"]
 
-        # =====================================================
-        # Lógica de Negócio (Mantida)
-        # =====================================================
-
-        # Pega o total extraído (agora vindo corretamente via âncoras)
+        # Logica de Negocio
         total_pagar = data["referencia_fatura"]["total_pagar"]
-
-        # Calcula economia
         economia = calcular_economia(total_pagar)
 
-        # ⚠️ WINDOWS: Se não tiver WeasyPrint, retorna o JSON para conferência
         if HTML is None:
             return {
                 "status": "ok",
@@ -122,36 +111,69 @@ async def gerar_proposta(
                 "economia": economia
             }
 
-        # 3️⃣ Renderiza HTML (Preenche o template com os dados novos)
         template = env.get_template("proposta.html")
         html_renderizado = template.render(
-            **data,  # Espalha os dados (concessionaria, cliente, itens...)
+            **data,
             empresa=EMPRESA,
             economia=economia
         )
 
-        # 4️⃣ Converte HTML → PDF
         pdf_final = HTML(string=html_renderizado).write_pdf()
 
-        # 5️⃣ Retorna PDF
         return Response(
             content=pdf_final,
             media_type="application/pdf",
-            headers={
-                "Content-Disposition": "inline; filename=proposta.pdf"
-            }
+            headers={"Content-Disposition": "inline; filename=proposta.pdf"}
         )
 
     except Exception as e:
-        # Se der erro, retorna 500 com a mensagem
         import traceback
-        traceback.print_exc()  # Printa erro no terminal
+        traceback.print_exc()
         return JSONResponse(status_code=500, content={"error": str(e)})
 
     finally:
-        # Limpeza do arquivo temporário
         if temp_pdf.exists():
             try:
                 temp_pdf.unlink()
+            except:
+                pass
+
+
+# =====================================================
+# ROTA 2: LEITURA DE FOTO (OCR) - NOVA!
+# =====================================================
+@app.post("/ler-fatura-foto")
+async def ler_fatura_foto(file: UploadFile = File(...)):
+    filename = file.filename.lower()
+    if not filename.endswith(('.jpg', '.jpeg', '.png')):
+        raise HTTPException(status_code=400, detail="Apenas imagens (.jpg, .png)")
+
+    file_id = str(uuid.uuid4())
+    ext = os.path.splitext(filename)[1]
+    temp_img_path = TEMP_OCR_DIR / f"{file_id}{ext}"
+
+    try:
+        # Salva a imagem
+        with open(temp_img_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        print(f"📸 Foto recebida na API Principal: {temp_img_path}")
+
+        # Chama a função de OCR que criamos
+        resultado = process_image_bill(temp_img_path)
+
+        if isinstance(resultado, dict):
+            resultado["_info_api"] = "Processado via API Unificada"
+
+        return JSONResponse(content=resultado)
+
+    except Exception as e:
+        print(f"❌ Erro: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
+        if temp_img_path.exists():
+            try:
+                temp_img_path.unlink()
             except:
                 pass
