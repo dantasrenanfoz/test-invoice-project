@@ -1,5 +1,6 @@
 fastapi
 uvicorn
 pdfplumber
-pillow
+jinja2
+weasyprint
 python-multipart
