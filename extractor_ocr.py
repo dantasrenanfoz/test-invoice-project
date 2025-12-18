@@ -12,10 +12,12 @@ from pathlib import Path
 from extractor import process_copel_bill
 
 # ==============================================================================
-# CONFIGURAÇÃO TESSERACT
+# CONFIGURAÇÃO TESSERACT (HÍBRIDA)
 # ==============================================================================
-# Ajuste o caminho se necessário
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Se o sistema for Windows (nt), usamos o caminho manual.
+# Se for Linux (posix) - que é o caso do Render - o Python acha sozinho.
+if os.name == 'nt':
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 def prepare_image_for_ocr(image_path):
