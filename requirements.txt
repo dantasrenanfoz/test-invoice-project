@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-pdfplumber
-jinja2
-weasyprint
 python-multipart
+pdfplumber
+pytesseract
+opencv-python-headless
+jinja2

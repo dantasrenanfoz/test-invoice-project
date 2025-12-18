@@ -1,206 +1,145 @@
 import pdfplumber
 import re
+import json
 from pathlib import Path
 
-# ===============================
-# CONFIGURAÇÕES
-# ===============================
-DEBUG_EXPORT_CROPS = False
-DEBUG_DIR = Path("debug_crops")
-DEBUG_DIR.mkdir(exist_ok=True)
 
 # ===============================
-# UTILIDADES
+# 1. UTILIDADES & CONVERSORES
 # ===============================
+
 def normalize(text: str) -> str:
+    """Remove espaços extras e quebras de linha desnecessárias."""
+    if not text: return ""
     return re.sub(r"\s+", " ", text).strip()
 
 
 def br_money_to_float(v):
-    if not v:
-        return None
+    """Converte R$ 1.234,56 ou 1.234,56 para float 1234.56"""
+    if not v: return None
+    if isinstance(v, (float, int)): return float(v)
+
+    # Remove R$, espaços e pontos de milhar
+    clean = v.replace("R$", "").replace(" ", "").replace(".", "")
+    # Troca vírgula decimal por ponto
+    clean = clean.replace(",", ".")
+
     try:
-        return float(v.replace(".", "").replace(",", "."))
-    except:
+        return float(clean)
+    except ValueError:
         return None
 
 
-def find_first(pattern, text, flags=0):
-    if not text:
-        return None
-    m = re.search(pattern, text, flags)
-    return m.group(1) if m else None
+def find_value_near_anchor(words, anchor_text, search_type="below", tolerance_x=15, tolerance_y=35):
+    """
+    Estratégia Espacial: Encontra um valor baseando-se na posição de uma palavra âncora.
 
+    Args:
+        words: Lista de palavras do pdfplumber (page.extract_words())
+        anchor_text: Texto para procurar (ex: "VENCIMENTO")
+        search_type: "below" (valor está abaixo) ou "right" (valor está à direita)
+        tolerance_x: Desvio horizontal aceitável
+        tolerance_y: Desvio vertical aceitável (altura da linha)
+    """
+    anchor = None
+    # 1. Encontrar a âncora
+    for w in words:
+        # Normaliza para maiúsculo e remove acentos básicos para comparação segura
+        w_text = w['text'].upper().replace("Ê", "E").replace("Ç", "C").replace("Ã", "A")
+        tgt_text = anchor_text.upper().replace("Ê", "E").replace("Ç", "C").replace("Ã", "A")
 
-def safe_int(v):
-    try:
-        return int(v)
-    except:
-        return None
-
-
-def safe_crop(page, bbox):
-    x0, y0, x1, y1 = bbox
-    px0, py0, px1, py1 = page.bbox
-
-    x0 = max(px0, x0)
-    y0 = max(py0, y0)
-    x1 = min(px1, x1)
-    y1 = min(py1, y1)
-
-    if x1 <= x0 or y1 <= y0:
-        return None
-
-    return page.crop((x0, y0, x1, y1))
-
-
-def export_crop(crop, name):
-    if not DEBUG_EXPORT_CROPS or not crop:
-        return
-    img = crop.to_image(resolution=200)
-    img.save(DEBUG_DIR / f"{name}.png")
-
-
-# ===============================
-# NORMALIZAÇÕES
-# ===============================
-def normalize_fases(v):
-    if not v:
-        return None
-    v = v.lower()
-    if "mono" in v:
-        return "mono"
-    if "bi" in v:
-        return "bi"
-    if "tri" in v:
-        return "tri"
-    return v
-
-
-MESES = {
-    "JAN": "01", "FEV": "02", "MAR": "03", "ABR": "04",
-    "MAI": "05", "JUN": "06", "JUL": "07", "AGO": "08",
-    "SET": "09", "OUT": "10", "NOV": "11", "DEZ": "12"
-}
-
-def normalize_mes_ano(v):
-    if not v or len(v) != 5:
-        return v
-    mes = MESES.get(v[:3])
-    ano = "20" + v[3:]
-    if mes:
-        return f"{mes}/{ano}"
-    return v
-
-
-def clean_logradouro(v):
-    if not v:
-        return None
-    v = re.sub(r"CEP.*", "", v, flags=re.IGNORECASE)
-    v = re.sub(r"Cidade:.*", "", v, flags=re.IGNORECASE)
-    return normalize(v)
-
-
-# ===============================
-# PDF
-# ===============================
-def extract_pdf(pdf_path, password):
-    with pdfplumber.open(pdf_path, password=password) as pdf:
-        page = pdf.pages[0]
-        words = page.extract_words(use_text_flow=True)
-        text = page.extract_text() or ""
-        text = text.replace("\u00A0", " ")
-        return page, words, text
-
-
-# ===============================
-# EXTRAÇÕES ESPECÍFICAS
-# ===============================
-def extract_uc_ref_venc_total(page):
-    bboxes = [
-        (260, 240, 560, 360),
-        (260, 260, 560, 390),
-        (260, 220, 560, 340),
-    ]
-
-    data = {"uc": None, "mes": None, "venc": None, "total": None}
-
-    for i, bbox in enumerate(bboxes):
-        crop = safe_crop(page, bbox)
-        if not crop:
-            continue
-
-        export_crop(crop, f"box_uc_{i}")
-        t = crop.extract_text() or ""
-
-        if not data["uc"]:
-            m = re.search(r"\b([A-Z]{1,3}\s*\d{8,10}|\d{8,10})\b", t)
-            if m:
-                data["uc"] = normalize(m.group(1))
-
-        if not data["mes"]:
-            m = re.search(r"\b(\d{2}/\d{4})\b", t)
-            if m:
-                data["mes"] = m.group(1)
-
-        if not data["venc"]:
-            m = re.search(r"\b(\d{2}/\d{2}/\d{4})\b", t)
-            if m:
-                data["venc"] = m.group(1)
-
-        if not data["total"]:
-            m = re.search(r"R\$\s*([\d\.,]+)", t)
-            if m:
-                data["total"] = br_money_to_float(m.group(1))
-
-        if all(data.values()):
+        if tgt_text in w_text:
+            anchor = w
             break
 
-    return data
+    if not anchor:
+        return None
+
+    candidates = []
+
+    # 2. Procurar candidatos na zona de busca
+    for w in words:
+        if w == anchor: continue
+        if w['text'] in ["R$", "RS"]: continue  # Ignora símbolo de moeda solto
+
+        if search_type == "below":
+            # O candidato deve estar abaixo da âncora (top > anchor.bottom)
+            # Mas não muito longe (dentro da tolerancia Y)
+            # E alinhado horizontalmente (dentro da tolerancia X)
+            is_below = anchor['bottom'] <= w['top'] <= anchor['bottom'] + tolerance_y
+            is_aligned = (anchor['x0'] - tolerance_x) <= w['x0'] <= (anchor['x1'] + tolerance_x)
+
+            if is_below and is_aligned:
+                candidates.append(w)
+
+        elif search_type == "right":
+            # O candidato deve estar à direita (x0 > anchor.x1)
+            # Na mesma linha visual
+            is_same_line = abs(w['top'] - anchor['top']) < 5
+            is_right = w['x0'] >= anchor['x1']
+
+            if is_same_line and is_right:
+                candidates.append(w)
+
+    if not candidates:
+        return None
+
+    # 3. Retornar o melhor candidato
+    if search_type == "below":
+        # Pega o que estiver visualmente mais acima (mais próximo da âncora)
+        return sorted(candidates, key=lambda x: x['top'])[0]['text']
+    else:
+        # Pega o que estiver mais à esquerda (mais próximo da âncora)
+        return sorted(candidates, key=lambda x: x['x0'])[0]['text']
 
 
-def extract_historico(text):
-    hist = []
-    for m in re.finditer(r"([A-Z]{3}\d{2})\s+(\d+)\s+(\d{1,2})", text):
-        hist.append({
-            "mes": normalize_mes_ano(m.group(1)),
-            "kwh": int(m.group(2)),
-            "dias": int(m.group(3))
-        })
-
-    uniq = []
-    seen = set()
-    for h in hist:
-        k = (h["mes"], h["kwh"], h["dias"])
-        if k not in seen:
-            seen.add(k)
-            uniq.append(h)
-    return uniq
-
+# ===============================
+# 2. EXTRAÇÃO DE TABELAS (ITENS)
+# ===============================
 
 def extract_itens_fatura(page):
     itens = []
 
-    bbox = (40, 380, 540, 660)
-    crop = safe_crop(page, bbox)
-    export_crop(crop, "itens_fatura")
+    # ESTRATÉGIA: Recorte Largo
+    # Em vez de tentar acertar a altura exata, pegamos do meio até o fim da página
+    # O Regex vai filtrar o que é lixo.
+    width = page.width
+    height = page.height
 
-    if not crop:
-        return itens
+    # Começa em 300 (pula cabeçalho) e vai até 750 (antes do rodapé final)
+    bbox = (0, 300, width, 750)
 
-    text = crop.extract_text() or ""
-    lines = [normalize(l) for l in text.split("\n") if len(l.strip()) > 3]
+    try:
+        crop = page.crop(bbox)
+        text = crop.extract_text() or ""
+    except:
+        # Fallback se o crop falhar (página muito pequena)
+        text = page.extract_text() or ""
 
-    for l in lines:
-        m = re.match(
-            r"([A-ZÇ\. ]+)\s+(kWh|UN)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)",
-            l
-        )
+    lines = text.split("\n")
+
+    for line in lines:
+        line = normalize(line)
+
+        # REGEX AJUSTADO PARA COPEL NF3e:
+        # 1. (.+?) -> Pega qualquer descrição (letras, numeros, pontos)
+        # 2. (kWh|UN) -> Unidade
+        # 3. ([\d\.,]+) -> Quantidade (aceita decimais)
+        # ... Valores monetários
+        pattern = r"(.+?)\s+(kWh|UN)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)"
+
+        m = re.match(pattern, line, re.IGNORECASE)
         if m:
+            descricao = m.group(1).strip()
+
+            # Filtra cabeçalhos da tabela que possam ter casado com o regex
+            if "ITENS" in descricao.upper() or "TRIBUTO" in descricao.upper():
+                continue
+
             itens.append({
-                "descricao": m.group(1).strip(),
+                "descricao": descricao,
                 "unidade": m.group(2),
-                "quantidade": float(m.group(3).replace(",", ".")),
+                "quantidade": br_money_to_float(m.group(3)),
                 "valor_unitario": br_money_to_float(m.group(4)),
                 "valor_total": br_money_to_float(m.group(5))
             })
@@ -208,87 +147,147 @@ def extract_itens_fatura(page):
     return itens
 
 
-def extract_impostos(text):
-    impostos = {}
+def extract_historico(text):
+    """Extrai histórico de consumo via Regex no texto completo (Metodo Robustro)"""
+    hist = []
+    # Padrão: MÊSANO (3 letras + 2 digitos) + Consumo + Dias
+    # Ex: OUT25 698 30
+    pattern = r"([A-Z]{3}\d{2})\s+(\d+)\s+(\d{1,2})"
 
-    for trib in ["ICMS", "PIS", "COFINS"]:
-        base = find_first(fr"{trib}\s+([\d\.,]+)", text)
-        aliq = find_first(fr"{trib}.*?(\d+,\d+)%", text)
-        valor = find_first(fr"{trib}.*?([\d\.,]+)$", text, re.MULTILINE)
+    for m in re.finditer(pattern, text):
+        mes_raw = m.group(1)
+        kwh = int(m.group(2))
+        dias = int(m.group(3))
 
-        impostos[trib.lower()] = {
-            "base_calculo": br_money_to_float(base),
-            "aliquota_percentual": float(aliq.replace(",", ".")) if aliq else None,
-            "valor": br_money_to_float(valor)
+        # Converte JAN25 para 01/2025
+        meses_map = {
+            "JAN": "01", "FEV": "02", "MAR": "03", "ABR": "04", "MAI": "05", "JUN": "06",
+            "JUL": "07", "AGO": "08", "SET": "09", "OUT": "10", "NOV": "11", "DEZ": "12"
         }
+        mes_nome = mes_raw[:3]
+        ano_abrev = mes_raw[3:]
+        mes_fmt = f"{meses_map.get(mes_nome, '00')}/20{ano_abrev}"
 
-    return impostos
+        hist.append({
+            "mes": mes_fmt,
+            "kwh": kwh,
+            "dias": dias
+        })
+
+    # Remove duplicatas preservando ordem
+    uniq = []
+    seen = set()
+    for h in hist:
+        k = (h['mes'], h['kwh'])
+        if k not in seen:
+            seen.add(k)
+            uniq.append(h)
+
+    return uniq
 
 
 # ===============================
-# EXTRAÇÃO PRINCIPAL
+# 3. EXTRAÇÃO PRINCIPAL
 # ===============================
-def extract_fields(page, words, text):
-    header = extract_uc_ref_venc_total(page)
 
-    return {
-        "concessionaria": {
-            "nome": "COPEL DISTRIBUIÇÃO S.A.",
-            "cnpj": "04.368.898/0001-06",
-            "inscricao_estadual": "9023307399",
-            "site": "www.copel.com"
-        },
-        "cliente": {
-            "nome": find_first(r"Nome:\s*([^\n]+)", text),
-            "cpf": find_first(r"CPF:\s*([0-9\.\-*]+)", text),
-            "endereco": {
-                "logradouro": clean_logradouro(
-                    find_first(
-                        r"Endereço:\s*(.*?)\s*(CEP|Cidade:)",
-                        text,
-                        re.DOTALL
-                    )
-                ),
-                "cidade": find_first(r"Cidade:\s*([A-Za-zÀ-ÿ ]+)", text),
-                "uf": find_first(r"Estado:\s*([A-Z]{2})", text),
-                "cep": find_first(r"(\d{5}-\d{3})", text)
+def process_copel_bill(pdf_path):
+    with pdfplumber.open(pdf_path) as pdf:
+        page = pdf.pages[0]
+        text = page.extract_text() or ""
+        words = page.extract_words()  # Vital para a estratégia de âncoras
+
+        # --- ESTRATÉGIA HÍBRIDA ---
+
+        # 1. ÂNCORAS (Para campos flutuantes)
+        # Procuramos o rótulo e pegamos o valor imediatamente ABAIXO ou ao LADO
+
+        uc = find_value_near_anchor(words, "CONSUMIDORA", "below", tolerance_y=50)
+        # Fallback para UC: Às vezes o OCR junta "CONSUMIDORA" e o número
+        if not uc:
+            m_uc = re.search(r"CONSUMIDORA\s*(\d+)", text)
+            if m_uc: uc = m_uc.group(1)
+
+        mes_ref = find_value_near_anchor(words, "MÊS/ANO", "below", tolerance_y=30)
+        vencimento = find_value_near_anchor(words, "VENCIMENTO", "below", tolerance_y=30)
+
+        # Para o Total, a âncora "PAGAR" é mais segura que "TOTAL" (que aparece em várias tabelas)
+        total_pagar_raw = find_value_near_anchor(words, "PAGAR", "below", tolerance_y=30)
+
+        # 2. REGEX DE TEXTO (Para campos padronizados)
+
+        # Endereço: Pega tudo entre "Endereço:" e o próximo label forte
+        endereco_match = re.search(r"Endereço:\s*(.*?)\s*(Cidade:|CEP:|CPF:)", text, re.DOTALL | re.IGNORECASE)
+        endereco_full = normalize(endereco_match.group(1)) if endereco_match else None
+
+        # CPF Mascarado
+        cpf_match = re.search(r"CPF:\s*([0-9\.\-*\s]+)", text)
+        cpf = normalize(cpf_match.group(1)) if cpf_match else None
+
+        nome_match = re.search(r"Nome:\s*([^\n]+)", text)
+        nome = normalize(nome_match.group(1)) if nome_match else None
+
+        # 3. ITENS E HISTÓRICO
+        itens = extract_itens_fatura(page)
+        historico = extract_historico(text)
+
+        # 4. IMPOSTOS (Lógica simples de Regex no texto corrido)
+        icms_val = re.search(r"ICMS.*?\s+([\d,]+)$", text, re.MULTILINE)
+        icms_base = re.search(r"ICMS.*?\s+([\d,]+)\s+[\d,]+%", text, re.MULTILINE)
+
+        # Montagem do JSON Final
+        data = {
+            "status": "ok",
+            "mensagem": "Extração realizada com sucesso.",
+            "dados_extraidos": {
+                "concessionaria": {
+                    "nome": "COPEL DISTRIBUIÇÃO S.A.",
+                    "cnpj": "04.368.898/0001-06",  # Estático para Copel
+                    "inscricao_estadual": "9023307399",
+                    "site": "www.copel.com"
+                },
+                "cliente": {
+                    "nome": nome,
+                    "cpf": cpf,
+                    "endereco": {
+                        "logradouro_completo": endereco_full,  # Simplificado para evitar erros de split
+                    }
+                },
+                "contrato": {
+                    "unidade_consumidora": normalize(uc),
+                    "subgrupo": "B1" if "B1" in text else "A4",  # Inferência simples
+                    "tipo_fornecimento": {
+                        "fases": "tri" if "trifasico" in text.lower() else (
+                            "mono" if "monofasico" in text.lower() else "bi")
+                    }
+                },
+                "referencia_fatura": {
+                    "mes_referencia": mes_ref,
+                    "vencimento": vencimento,
+                    "total_pagar": br_money_to_float(total_pagar_raw)
+                },
+                "itens_fatura": itens,
+                "historico_consumo": historico,
+                "impostos": {
+                    "icms": {
+                        "valor": br_money_to_float(icms_val.group(1)) if icms_val else 0.0,
+                        # Tenta pegar base de calculo se achar, senão 0
+                        "base_calculo": br_money_to_float(icms_base.group(1)) if icms_base else 0.0
+                    }
+                }
             }
-        },
-        "contrato": {
-            "unidade_consumidora": header["uc"],
-            "classificacao": find_first(r"Classifica[cç][aã]o:\s*(.+)", text),
-            "subgrupo": find_first(r"\b(B[1-4]|A[1-4]|A3A|AS)\b", text),
-            "tipo_fornecimento": {
-                "descricao": find_first(r"Tipo de Fornecimento:\s*(.+)", text),
-                "corrente": find_first(r"/\s*(\d+A)", text),
-                "fases": normalize_fases(
-                    find_first(r"(mono|bi|tri)f[aá]sico", text, re.IGNORECASE)
-                )
-            }
-        },
-        "referencia_fatura": {
-            "mes_referencia": header["mes"],
-            "vencimento": header["venc"],
-            "total_pagar": header["total"]
-        },
-        "leituras": {
-            "leitura_anterior": find_first(r"Leitura anterior\s*(\d{2}/\d{2}/\d{4})", text),
-            "leitura_atual": find_first(r"Leitura atual\s*(\d{2}/\d{2}/\d{4})", text),
-            "numero_dias": safe_int(find_first(r"N[ºo]\s*de\s*dias\s*(\d+)", text)),
-            "proxima_leitura": find_first(r"Pr[óo]xima Leitura\s*(\d{2}/\d{2}/\d{4})", text)
-        },
-        "medidor": {
-            "numero": find_first(r"Medidor\s+(\d{8,12})", text),
-            "leitura_anterior": find_first(r"Leitura Anterior\s*(\d+)", text),
-            "leitura_atual": find_first(r"Leitura Atual\s*(\d+)", text),
-            "constante": 1,
-            "consumo_kwh": safe_int(find_first(r"Consumo\s*kWh\s*(\d+)", text))
-        },
-        "itens_fatura": extract_itens_fatura(page),
-        "impostos": extract_impostos(text),
-        "historico_consumo": extract_historico(text),
-        "fiscal": {
-            "numero_fatura": find_first(r"N[uú]mero da fatura:\s*([A-Z0-9\-]+)", text),
-            "data_emissao": find_first(r"DATA DE EMISS[AÃ]O:\s*(\d{2}/\d{2}/\d{4})", text)
         }
-    }
+
+        return data
+
+
+# ===============================
+# EXECUÇÃO
+# ===============================
+if __name__ == "__main__":
+    arquivo_pdf = "copel700_unlocked.pdf"  # Nome do seu arquivo
+
+    if Path(arquivo_pdf).exists():
+        resultado = process_copel_bill(arquivo_pdf)
+        print(json.dumps(resultado, indent=2, ensure_ascii=False))
+    else:
+        print(f"Arquivo {arquivo_pdf} não encontrado.")

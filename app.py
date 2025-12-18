@@ -1,10 +1,14 @@
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from pathlib import Path
 import shutil
 import uuid
+import os
 
-from extractor import extract_pdf, extract_fields
+# =====================================================
+# MUDANÇA 1: Importamos a nova função única do extrator
+# =====================================================
+from extractor import process_copel_bill
 from jinja2 import Environment, FileSystemLoader
 
 # =====================================================
@@ -48,8 +52,9 @@ EMPRESA = {
     "email": "contato@solmais.com.br"
 }
 
+
 # =====================================================
-# CÁLCULO DE ECONOMIA (MODELO ALEXANDRIA)
+# CÁLCULO DE ECONOMIA
 # =====================================================
 def calcular_economia(valor_fatura: float, percentual: float = 0.10):
     if not valor_fatura:
@@ -71,43 +76,56 @@ def calcular_economia(valor_fatura: float, percentual: float = 0.10):
         "valor_com_desconto": valor_com_desconto
     }
 
+
 # =====================================================
 # ROTA ÚNICA — GERA PDF FINAL
 # =====================================================
 @app.post("/gerar-proposta")
 async def gerar_proposta(
-    pdf: UploadFile = File(...),
-    senha: str = Form(...)
+        pdf: UploadFile = File(...),
+        senha: str = Form(None)  # Senha opcional
 ):
+    # Gera um nome único para o arquivo
     temp_pdf = TEMP_DIR / f"{uuid.uuid4()}.pdf"
 
+    # Salva o arquivo no disco
     with open(temp_pdf, "wb") as f:
         shutil.copyfileobj(pdf.file, f)
 
     try:
-        # 1️⃣ Extrai dados da fatura
-        page, words, text = extract_pdf(temp_pdf, senha)
-        data = extract_fields(page, words, text)
+        # =====================================================
+        # MUDANÇA 2: Nova Lógica de Extração
+        # =====================================================
+        # O novo extrator faz tudo sozinho: abre, lê e estrutura.
+        # Ele retorna um dicionário completo.
+        resultado_completo = process_copel_bill(temp_pdf)
 
-        # 2️⃣ Calcula economia
-        economia = calcular_economia(
-            data["referencia_fatura"]["total_pagar"]
-        )
+        # Acessamos a parte que interessa: 'dados_extraidos'
+        data = resultado_completo["dados_extraidos"]
 
-        # ⚠️ WINDOWS: WeasyPrint indisponível
+        # =====================================================
+        # Lógica de Negócio (Mantida)
+        # =====================================================
+
+        # Pega o total extraído (agora vindo corretamente via âncoras)
+        total_pagar = data["referencia_fatura"]["total_pagar"]
+
+        # Calcula economia
+        economia = calcular_economia(total_pagar)
+
+        # ⚠️ WINDOWS: Se não tiver WeasyPrint, retorna o JSON para conferência
         if HTML is None:
             return {
                 "status": "ok",
-                "mensagem": "Extração realizada com sucesso.",
-                "observacao": "Geração de PDF ocorre apenas no ambiente Linux (Render).",
+                "mensagem": "PDF Gerado apenas no Linux. Aqui estão os dados processados.",
                 "dados_extraidos": data,
                 "economia": economia
             }
 
-        # 3️⃣ Renderiza HTML
+        # 3️⃣ Renderiza HTML (Preenche o template com os dados novos)
         template = env.get_template("proposta.html")
         html_renderizado = template.render(
-            **data,
+            **data,  # Espalha os dados (concessionaria, cliente, itens...)
             empresa=EMPRESA,
             economia=economia
         )
@@ -124,5 +142,16 @@ async def gerar_proposta(
             }
         )
 
+    except Exception as e:
+        # Se der erro, retorna 500 com a mensagem
+        import traceback
+        traceback.print_exc()  # Printa erro no terminal
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
     finally:
-        temp_pdf.unlink(missing_ok=True)
+        # Limpeza do arquivo temporário
+        if temp_pdf.exists():
+            try:
+                temp_pdf.unlink()
+            except:
+                pass
