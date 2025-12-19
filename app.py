@@ -110,7 +110,12 @@ async def gerar_proposta(
         resultado_completo = process_copel_bill(temp_pdf)
         data = resultado_completo["dados_extraidos"]
 
-        total_pagar = data["referencia_fatura"]["total_pagar"]
+        total_pagar = data["referencia_fatura"].get("total_pagar")
+
+        if not total_pagar:
+            total_pagar = 1.0
+            data["referencia_fatura"]["total_pagar"] = total_pagar
+
         economia = calcular_economia(total_pagar)
 
         if HTML is None:
