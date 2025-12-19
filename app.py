@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import Response, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 import shutil
 import uuid
@@ -25,6 +26,18 @@ except Exception:
 # APP
 # =====================================================
 app = FastAPI(title="API Solarx - Faturas & OCR")
+
+# ===================== 🔐 CORS (AJUSTE AQUI) =====================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://93.127.212.221:8080"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# ================================================================
 
 # =====================================================
 # PASTAS TEMPORÁRIAS
@@ -57,7 +70,6 @@ EMPRESA = {
     "email": "contato@solmais.com.br"
 }
 
-
 # =====================================================
 # CÁLCULO DE ECONOMIA
 # =====================================================
@@ -81,14 +93,13 @@ def calcular_economia(valor_fatura: float, percentual: float = 0.10):
         "valor_com_desconto": valor_com_desconto
     }
 
-
 # =====================================================
 # ROTA 1: GERA PROPOSTA (PDF DIGITAL)
 # =====================================================
 @app.post("/gerar-proposta")
 async def gerar_proposta(
-        pdf: UploadFile = File(...),
-        senha: str = Form(None)
+    pdf: UploadFile = File(...),
+    senha: str = Form(None)
 ):
     temp_pdf = TEMP_DIR / f"{uuid.uuid4()}.pdf"
 
@@ -99,7 +110,6 @@ async def gerar_proposta(
         resultado_completo = process_copel_bill(temp_pdf)
         data = resultado_completo["dados_extraidos"]
 
-        # Logica de Negocio
         total_pagar = data["referencia_fatura"]["total_pagar"]
         economia = calcular_economia(total_pagar)
 
@@ -138,9 +148,8 @@ async def gerar_proposta(
             except:
                 pass
 
-
 # =====================================================
-# ROTA 2: LEITURA DE FOTO (OCR) - NOVA!
+# ROTA 2: LEITURA DE FOTO (OCR)
 # =====================================================
 @app.post("/ler-fatura-foto")
 async def ler_fatura_foto(file: UploadFile = File(...)):
@@ -153,13 +162,11 @@ async def ler_fatura_foto(file: UploadFile = File(...)):
     temp_img_path = TEMP_OCR_DIR / f"{file_id}{ext}"
 
     try:
-        # Salva a imagem
         with open(temp_img_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
         print(f"📸 Foto recebida na API Principal: {temp_img_path}")
 
-        # Chama a função de OCR que criamos
         resultado = process_image_bill(temp_img_path)
 
         if isinstance(resultado, dict):
