@@ -5,3 +5,4 @@ pdfplumber
 pytesseract
 opencv-python-headless
 jinja2
+weasyprint
