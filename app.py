@@ -136,7 +136,8 @@ async def gerar_proposta(
             **data,
             empresa=EMPRESA,
             economia=economia,
-            media_consumo_kwh=media_consumo_kwh
+            media_consumo_kwh=media_consumo_kwh,
+            dados_json = data
         )
 
         pdf_final = HTML(string=html_renderizado).write_pdf()
