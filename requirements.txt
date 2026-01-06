@@ -1,11 +1,9 @@
-pytesseract
-opencv-python-headless
-pdfplumber
-weasyprint
 fastapi
 uvicorn
 python-multipart
-jinja2
+pdfplumber
 paddleocr
 paddlepaddle
-
+pypdfium2
+pillow
+opencv-python-headless
