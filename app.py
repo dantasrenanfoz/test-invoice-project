@@ -7,15 +7,17 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from paddleocr import PaddleOCR
 from extractor import CopelExtractor
 
-app = FastAPI(title="Parser Copel PRO")
+app = FastAPI(title="Parser Copel PRO - Lex Style")
 ex = CopelExtractor()
 _ocr_model = None
+
 
 def get_ocr():
     global _ocr_model
     if _ocr_model is None:
         _ocr_model = PaddleOCR(lang="pt", use_angle_cls=True, show_log=False, use_gpu=False)
     return _ocr_model
+
 
 def extract_text_ocr(pdf_path: Path):
     pdf = pdfium.PdfDocument(str(pdf_path))
@@ -33,6 +35,7 @@ def extract_text_ocr(pdf_path: Path):
     pdf.close()
     return "\n".join(lines)
 
+
 @app.post("/ler-fatura-pdf")
 async def ler_fatura(pdf: UploadFile = File(...)):
     temp_path = Path(f"temp_{pdf.filename}")
@@ -45,30 +48,36 @@ async def ler_fatura(pdf: UploadFile = File(...)):
             raw_text = "\n".join([page.extract_text() or "" for page in p.pages])
 
         fonte = "PDF_TEXT"
-        # Se extração nativa for ruim, forçar OCR
         if len(raw_text.strip()) < 500:
             fonte = "OCR"
             raw_text = extract_text_ocr(temp_path)
 
-        # 1. Execução das Extrações
-        cliente_full = ex.extract_cliente_info(raw_text)
-        fatura_dados = ex.extract_fatura_dados(raw_text)
-        medicoes     = ex.extract_medicoes(raw_text)
-        itens        = ex.extract_itens_faturados(raw_text)
-        scee         = ex.extract_scee(raw_text)
-        historicos   = ex.extract_historicos(raw_text)
-        leitura      = ex.extract_leitura_status(raw_text)
-        tributos     = ex.extract_tributos(raw_text)
-        bandeiras    = ex.extract_bandeiras(raw_text)
+        # 1. Extração via Extractor
+        cliente = ex.extract_cliente_info(raw_text)
+        fatura = ex.extract_fatura_dados(raw_text)
+        medicoes = ex.extract_medicoes(raw_text)
+        itens = ex.extract_itens_faturados(raw_text)
+        scee = ex.extract_scee(raw_text)
+        hist = ex.extract_historicos(raw_text)
+        leitura = ex.extract_leitura_status(raw_text)
+        trib = ex.extract_tributos(raw_text)
+        band = ex.extract_bandeiras(raw_text)
 
-        # 2. Consolidação de Energia
+        # 2. Consolidação de Negócio (Ajustada conforme solicitado)
         cons_kwh = sum(m['valor_apurado'] for m in medicoes if m['tipo'] == 'CONSUMO')
-        ger_kwh  = sum(m['valor_apurado'] for m in medicoes if m['tipo'] == 'GERACAO')
+
+        # Geração Mensal (Rendimento do período)
+        ger_mes_kwh = sum(m['valor_apurado'] for m in medicoes if m['tipo'] == 'GERACAO')
+
+        # MUDANÇA SOLICITADA: geracao_kwh agora é a LEITURA ATUAL (Odômetro acumulado)
+        ger_leitura_atual = sum(m['leitura_atual'] for m in medicoes if m['tipo'] == 'GERACAO')
+
         compensada_kwh = abs(sum(i['quantidade'] for i in itens if i['tipo'] == 'INJETADA'))
 
-        # 3. Definição do Tipo
+        # Lógica de Tipo de Unidade
+        tem_linha_geracao = any(m['tipo'] == 'GERACAO' for m in medicoes)
         tipo_unidade = "CONSUMIDORA"
-        if ger_kwh > 0 or "Micro/Minigeradora" in raw_text:
+        if tem_linha_geracao or scee.get("tipo") == "MICROGERADORA":
             tipo_unidade = "MICROGERADORA"
         elif scee.get("participa"):
             tipo_unidade = "BENEFICIARIA_SCEE"
@@ -76,35 +85,33 @@ async def ler_fatura(pdf: UploadFile = File(...)):
         return {
             "documento": {
                 "concessionaria": "COPEL",
+                "tipo": "NF3E",
                 "arquivo_nome": pdf.filename,
                 "fonte_extracao": fonte,
                 "versao_parser": "copel-parser-v2.1-final"
             },
             "unidade": {
-                "codigo_uc": cliente_full['uc'],
+                "codigo_uc": cliente['uc'],
                 "tipo": tipo_unidade,
                 "classe": ex.safe_search(r"(B\d\s+[A-Za-z/ ]+)", raw_text),
                 "possui_gd": tipo_unidade != "CONSUMIDORA"
             },
-            "cliente": {
-                "nome": cliente_full['nome'],
-                "cpf_cnpj": cliente_full['cpf_cnpj'],
-                "endereco": cliente_full['endereco']
-            },
-            "fatura": fatura_dados,
+            "cliente": cliente,
+            "fatura": fatura,
             "leitura": leitura,
             "medicao": {"registros": medicoes},
             "energia": {
                 "consumo_kwh": cons_kwh,
-                "geracao_kwh": ger_kwh,
+                "geracao_kwh": ger_leitura_atual,  # Valor solicitado: Leitura Atual (Ex: 98086)
+                "geracao_mes_kwh": ger_mes_kwh,  # Rendimento do mês (Ex: 0 ou 15454)
                 "energia_compensada_kwh": compensada_kwh,
                 "saldo_creditos_kwh": scee.get("saldos", {}).get("acumulado", {}).get("tp", 0)
             },
             "itens_faturados": itens,
-            "tributos": tributos,
+            "tributos": trib,
             "scee": scee,
-            "historicos": historicos,
-            "bandeiras_tarifarias": bandeiras,
+            "historicos": hist,
+            "bandeiras_tarifarias": band,
             "nf3e": {
                 "chave_acesso": (ex.safe_search(r"Chave de Acesso\s*([\d\s]{40,})", raw_text) or "").replace(" ", ""),
                 "protocolo": ex.safe_search(r"Protocolo de Autorização:\s*(\d+)", raw_text)
@@ -115,7 +122,7 @@ async def ler_fatura(pdf: UploadFile = File(...)):
             }
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Falha técnica: {str(e)}")
     finally:
         if temp_path.exists():
             temp_path.unlink()
