@@ -52,10 +52,19 @@ class CopelExtractor:
         }
 
     def extract_fatura_dados(self, text):
-        valor = self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text) or \
-                self.safe_search(r"R\$\s*([\d\.,]+)", text)
+        # Procura o padrão de mês/ano (00/0000) mas garante que não é o CNPJ
+        # buscando a palavra "REF" ou "MÊS" antes, ou validando a posição
+        match = re.search(r"(?:MÊS|REF|ANO).*?(\d{2}/\d{4})", text, re.IGNORECASE | re.DOTALL)
+        if match:
+            mes_ref = match.group(1)
+        else:
+            # Tenta pegar a data de vencimento e extrair o mês anterior como fallback
+            mes_ref = self.safe_search(r"(\d{2}/\d{4})", text)
+
+        valor = self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text)
+
         return {
-            "mes_referencia": self.safe_search(r"(\d{2}/\d{4})", text),
+            "mes_referencia": mes_ref,
             "vencimento": self.safe_search(r"(\d{2}/\d{2}/\d{4})", text),
             "valor_total": self.br_money_to_float(valor)
         }
