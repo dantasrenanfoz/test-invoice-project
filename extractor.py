@@ -52,21 +52,29 @@ class CopelExtractor:
         }
 
     def extract_fatura_dados(self, text):
-        # Procura o padrão de mês/ano (00/0000) mas garante que não é o CNPJ
-        # buscando a palavra "REF" ou "MÊS" antes, ou validando a posição
-        match = re.search(r"(?:MÊS|REF|ANO).*?(\d{2}/\d{4})", text, re.IGNORECASE | re.DOTALL)
-        if match:
-            mes_ref = match.group(1)
-        else:
-            # Tenta pegar a data de vencimento e extrair o mês anterior como fallback
-            mes_ref = self.safe_search(r"(\d{2}/\d{4})", text)
+        # 1. Captura o bloco de datas (Anterior | Atual | Dias | Próxima)
+        # Exemplo no OCR: 17/09/2025 17/10/2025 30 18/11/2025
+        pattern_datas = r"(\d{2}/\d{2}/\d{4})\s+(\d{2}/\d{2}/\d{4})\s+(\d+)\s+(\d{2}/\d{2}/\d{4})"
+        datas = re.search(pattern_datas, text)
 
-        valor = self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text)
+        data_ant = datas.group(1) if datas else None
+        data_atu = datas.group(2) if datas else None
+        dias_fat = datas.group(3) if datas else None
+        prox_lei = datas.group(4) if datas else None
+
+        # 2. Captura Mês Ref, Vencimento e Total (Garantindo que ignore o CNPJ)
+        # Procuramos o padrão 10/2025 01/12/2025 R$721,24
+        pattern_fin = r"(\d{2}/\d{4})\s+(\d{2}/\d{2}/\d{4})\s+R\$\s*([\d\.,]+)"
+        fin = re.search(pattern_fin, text)
 
         return {
-            "mes_referencia": mes_ref,
-            "vencimento": self.safe_search(r"(\d{2}/\d{2}/\d{4})", text),
-            "valor_total": self.br_money_to_float(valor)
+            "mes_referencia": fin.group(1) if fin else self.safe_search(r"REF:.*?(\d{2}/\d{4})", text),
+            "vencimento": fin.group(2) if fin else self.safe_search(r"VENCIMENTO\s*(\d{2}/\d{2}/\d{4})", text),
+            "valor_total": self.br_money_to_float(fin.group(3)) if fin else 0,
+            "data_leitura_anterior": data_ant,
+            "data_leitura_atual": data_atu,
+            "dias_faturamento": dias_fat,
+            "data_proxima_leitura": prox_lei
         }
 
     def extract_medicoes(self, text):
