@@ -17,24 +17,19 @@ class CopelExtractor:
         except:
             return 0.0
 
-    def safe_search(self, pattern, text, group=1, flags=re.IGNORECASE | re.DOTALL):
+    def safe_search(self, pattern, text, group=1):
         if not text: return None
-        m = re.search(pattern, text, flags)
+        m = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
         if m:
-            try:
-                res = m.group(group)
-                return self.normalize(res) if res else None
-            except:
-                return self.normalize(m.group(0))
+            return self.normalize(m.group(group))
         return None
 
     def extract_cliente_info(self, text):
-        # Captura da UC - Refinada para ignorar falsos positivos
-        uc = self.safe_search(r"UNIDADE CONSUMIDORA\s*\n?\s*(\d{8,10})", text) or \
-             self.safe_search(r"(\d{9,10})\s*CÓDIGO DÉBITO", text)
+        # VOLTANDO PARA A LÓGICA DA VERSÃO 1: Busca simples por 9 dígitos
+        uc = self.safe_search(r"(?:UNIDADE CONSUMIDORA|DÉBITO AUTOMÁTICO|UC)\s*[:\s]*(\d{9,10})", text) or \
+             self.safe_search(r"(?:\s|^)(\d{9,10})(?:\s|$)", text)  # Busca qualquer número de 9 ou 10 dígitos solto
 
-        # Fase e Taxa
-        fase_str = self.safe_search(r"(Monofasico|Bifasico|Trifasico)\s*/\d+A", text)
+        fase_str = self.safe_search(r"(Monofasico|Bifasico|Trifasico)", text)
         taxa_minima = 30
         if fase_str:
             if "Trifasico" in fase_str:
@@ -42,112 +37,75 @@ class CopelExtractor:
             elif "Bifasico" in fase_str:
                 taxa_minima = 50
 
-        regime = "GD1"
-        if any(x in text.upper() for x in ["GD II", "GD 2", "14.300", "LEI 14300"]):
-            regime = "GD2"
-
         return {
             "nome": self.safe_search(r"Nome:\s*(.*?)\s*\n", text),
             "uc": uc,
             "cpf_cnpj": self.safe_search(r"(?:CNPJ|CPF):\s*([\d\.\-\/\*]+)", text),
-            "tipo_fase": fase_str,
+            "tipo_fase": fase_str or "Trifasico",
             "kwh_disponibilidade": taxa_minima,
-            "regime_gd": regime,
+            "regime_gd": "GD2" if "GD II" in text or "GD 2" in text else "GD1",
             "endereco": {
                 "logradouro": self.safe_search(r"Endereço:\s*(.*?)\s*CEP", text),
                 "cidade": self.safe_search(r"Cidade:\s*([A-Za-z\s\.\-]+)\s*-\s*Estado", text),
-                "estado": self.safe_search(r"Estado:\s*([A-Z]{2})", text),
-                "cep": self.safe_search(r"CEP:\s*(\d{5}-\d{3})", text)
+                "estado": self.safe_search(r"Estado:\s*([A-Z]{2})", text)
             }
         }
 
     def extract_fatura_dados(self, text):
-        # Procura especificamente o bloco REF / VENCIMENTO / TOTAL
-        # Evita pegar o 0001/06 do CNPJ da Copel
-        bloco_financeiro = self.safe_search(r"(\d{2}/\d{4})\s+(\d{2}/\d{2}/\d{4})\s+R\$\s*([\d\.,]+)", text, group=0)
-
-        if bloco_financeiro:
-            partes = bloco_financeiro.split()
-            return {
-                "mes_referencia": partes[0],
-                "vencimento": partes[1],
-                "valor_total": self.br_money_to_float(partes[2])
-            }
+        # VOLTANDO PARA A LÓGICA DA VERSÃO 1: Busca o valor próximo a "TOTAL"
+        valor = self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text) or \
+                self.safe_search(r"R\$\s*([\d\.,]+)", text)
 
         return {
-            "mes_referencia": self.safe_search(r"REF: MÊS / ANO\s*\n?\s*(\d{2}/\d{4})", text),
-            "vencimento": self.safe_search(r"VENCIMENTO\s*\n?\s*(\d{2}/\d{2}/\d{4})", text),
-            "valor_total": self.br_money_to_float(self.safe_search(r"TOTAL A PAGAR\s*\n?\s*R\$\s*([\d\.,]+)", text))
+            "mes_referencia": self.safe_search(r"(\d{2}/\d{4})", text),
+            "vencimento": self.safe_search(r"(\d{2}/\d{2}/\d{4})", text),
+            "valor_total": self.br_money_to_float(valor)
         }
 
     def extract_medicoes(self, text):
         registros = []
-        # Regex ajustada para capturar o Consumo e a Geração (como na conta do Consórcio)
+        # Mantendo a captura de medidores que já funcionava
         pattern = r"(\d{8,})\s+(CONSUMO|GERAC)\s+kWh\s*([A-Z]{2}|)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)"
         matches = re.findall(pattern, text)
         for m in matches:
             registros.append({
                 "medidor": m[0],
                 "tipo": "CONSUMO" if "CONSUMO" in m[1] else "GERACAO",
-                "posto": m[2] if m[2] else "TP",
-                "leitura_anterior": int(m[3].replace('.', '')),
                 "leitura_atual": int(m[4].replace('.', '')),
-                "constante": int(self.br_money_to_float(m[5])),
                 "valor_apurado": int(m[6].replace('.', ''))
             })
         return registros
 
     def extract_itens_faturados(self, text):
         itens = []
-        # Captura ampliada para pegar as 8 colunas e identificar IP corretamente
-        pattern = r"(.*?)\s+(kWh|UN|kW|kVArh)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)"
-        lines = text.split('\n')
-        for line in lines:
-            m = re.search(pattern, line)
+        # Captura genérica de linhas: Descrição + Unidade + Valores
+        for line in text.split('\n'):
+            m = re.search(r"(.*?)\s+(kWh|UN)\s+([\d\.,\s-]+)", line)
             if m:
                 desc = self.normalize(m.group(1))
-                val_total = self.br_money_to_float(m.group(5))
-                tarifa_liq = self.br_money_to_float(m.group(8))
+                nums = m.group(3).split()
+                if len(nums) < 1: continue
+
+                # Pegamos o valor da linha e a tarifa unitária (última coluna)
+                valor_total = self.br_money_to_float(nums[2]) if len(nums) > 2 else self.br_money_to_float(nums[0])
+                tarifa_liq = self.br_money_to_float(nums[-1])
 
                 tipo = "OUTROS"
-                if "CONSUMO" in desc.upper():
+                if "CONSUMO" in desc.upper() and "USO" not in desc.upper():
                     tipo = "TE"
                 elif "USO SISTEMA" in desc.upper() or "TUSD" in desc.upper():
                     tipo = "TUSD"
-                elif "ILUMIN" in desc.upper() or "CONT ILUM" in desc.upper():
+                elif "ILUMIN" in desc.upper():
                     tipo = "IP"
-                elif "INJ" in desc.upper() or val_total < 0:
+                elif "INJETADA" in desc.upper() or "INJ" in desc.upper() or valor_total < 0:
                     tipo = "CREDITO"
 
                 itens.append({
-                    "descricao": desc, "tipo": tipo, "unidade": m.group(2),
-                    "quantidade": self.br_money_to_float(m.group(3)),
-                    "preco_com_tributo": self.br_money_to_float(m.group(4)),
-                    "valor": val_total,
-                    "tarifa_liquida": tarifa_liq
+                    "descricao": desc, "tipo": tipo, "quantidade": self.br_money_to_float(nums[0]),
+                    "valor": valor_total, "tarifa_liquida": tarifa_liq
                 })
         return itens
 
     def extract_scee(self, text):
-        # Saldo Acumulado (Para o Consórcio)
-        s_acum = self.safe_search(r"Saldo Acumulado.*?(\d+)", text)
-        return {
-            "participa": "Demonstrativo" in text or "SCEE" in text or "GERAC" in text,
-            "saldos": {"acumulado": {"tp": int(s_acum) if s_acum and s_acum.isdigit() else 0}}
-        }
-
-    def extract_historicos(self, text):
-        # Histórico de Consumo
-        pattern = r"([A-Z]{3}\d{2})\s+([\d\.]+)\s+(\d+)"
-        matches = re.findall(pattern, text)
-        registros = []
-        for m in matches:
-            registros.append({"mes": m[0], "kwh": int(m[1].replace('.', '')), "dias": int(m[2])})
-        return registros
-
-    def extract_tributos(self, text):
-        tribs = {}
-        for t in ["ICMS", "PIS", "COFINS"]:
-            m = re.search(rf"{t}\s+([\d\.,]+)\s+([\d\.,]+)%\s+([\d\.,]+)", text)
-            if m: tribs[t.lower()] = {"base": self.br_money_to_float(m[1]), "valor": self.br_money_to_float(m[3])}
-        return tribs
+        s_acum = self.safe_search(r"Saldo Acumulado.*?(\d+)", text.replace("\n", " "))
+        return {"saldos": {"acumulado": {"tp": int(s_acum) if s_acum and s_acum.isdigit() else 0}}}
