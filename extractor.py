@@ -22,13 +22,14 @@ class CopelExtractor:
         m = re.search(pattern, text, flags)
         if m:
             try:
-                return self.normalize(m.group(group)) if m.group(group) else None
+                res = m.group(group)
+                return self.normalize(res) if res else None
             except:
                 return self.normalize(m.group(0))
         return None
 
     def extract_cliente_info(self, text):
-        # Detecção de Fase (Essencial para a Taxa Mínima do seu papel)
+        # --- NOVA DETECÇÃO: FASE E TAXA MÍNIMA ---
         fase_str = self.safe_search(r"(Monofasico|Bifasico|Trifasico)\s*/\d+A", text)
         taxa_minima = 30
         if fase_str:
@@ -37,9 +38,9 @@ class CopelExtractor:
             elif "Bifasico" in fase_str:
                 taxa_minima = 50
 
-        # Detecção de GD1 ou GD2 (Lei 14.300)
+        # --- NOVA DETECÇÃO: GD1 OU GD2 ---
         regime = "GD1"
-        if any(x in text.upper() for x in ["GD II", "GD 2", "14.300", "14300"]):
+        if any(x in text.upper() for x in ["GD II", "GD 2", "14.300", "LEI 14300"]):
             regime = "GD2"
 
         return {
@@ -53,55 +54,84 @@ class CopelExtractor:
             "endereco": {
                 "logradouro": self.safe_search(r"Endereço:\s*(.*?)\s*CEP", text),
                 "cidade": self.safe_search(r"Cidade:\s*([A-Za-z\s\.\-]+)\s*-\s*Estado", text),
-                "estado": self.safe_search(r"Estado:\s*([A-Z]{2})", text)
+                "estado": self.safe_search(r"Estado:\s*([A-Z]{2})", text),
+                "cep": self.safe_search(r"CEP:\s*(\d{5}-\d{3})", text)
             }
         }
 
     def extract_fatura_dados(self, text):
         return {
-            "mes_referencia": self.safe_search(r"(\d{2}/\d{4})", text),
-            "vencimento": self.safe_search(r"(\d{2}/\d{2}/\d{4})", text),
+            "mes_referencia": self.safe_search(r"REF\.\s*M[EÊ]S.*?(\d{2}/\d{4})", text) or self.safe_search(
+                r"(\d{2}/\d{4})", text),
+            "vencimento": self.safe_search(r"VENCIMENTO\s*(\d{2}/\d{2}/\d{4})", text) or self.safe_search(
+                r"(\d{2}/\d{2}/\d{4})", text),
             "valor_total": self.br_money_to_float(self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text))
         }
 
+    def extract_medicoes(self, text):
+        registros = []
+        pattern = r"(\d{8,})\s+(CONSUMO|GERAC)\s+kWh\s*([A-Z]{2}|)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)"
+        matches = re.findall(pattern, text)
+        for m in matches:
+            registros.append({
+                "medidor": m[0],
+                "tipo": "CONSUMO" if "CONSUMO" in m[1] else "GERACAO",
+                "posto": m[2] if m[2] else "TP",
+                "leitura_anterior": int(m[3].replace('.', '')),
+                "leitura_atual": int(m[4].replace('.', '')),
+                "constante": int(self.br_money_to_float(m[5])),
+                "valor_apurado": int(m[6].replace('.', ''))
+            })
+        return registros
+
     def extract_itens_faturados(self, text):
         itens = []
-        # Captura: Descrição | Unid | Quant | Preço C/ Trib | Valor | PIS/COF | ICMS | Tarifa Líquida
-        # O segredo está no último grupo: a tarifa sem impostos (unitária)
-        pattern = r"(.*?)\s+(kWh|UN)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)"
-
-        lines = text.split('\n')
-        for line in lines:
+        # Captura as 8 colunas da Copel, incluindo a última (Tarifa Líquida sem impostos)
+        pattern = r"(.*?)\s+(kWh|UN|kW|kVArh)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)"
+        for line in text.split('\n'):
             m = re.search(pattern, line)
             if m:
                 desc = self.normalize(m.group(1))
                 val_total = self.br_money_to_float(m.group(5))
-                tarifa_liquida = self.br_money_to_float(m.group(8))  # A última coluna da COPEL
+                tarifa_liq = self.br_money_to_float(m.group(8))  # Coluna Tarifa unit. (R$)
 
                 tipo = "OUTROS"
                 if "CONSUMO" in desc.upper():
                     tipo = "TE"
-                elif "USO SISTEMA" in desc.upper():
+                elif "USO SISTEMA" in desc.upper() or "TUSD" in desc.upper():
                     tipo = "TUSD"
-                elif "ILUMIN" in desc.upper():
+                elif "ILUMINACAO" in desc.upper() or "ILUMIN PUBLICA" in desc.upper():
                     tipo = "IP"
                 elif "INJ" in desc.upper() or val_total < 0:
                     tipo = "CREDITO"
 
                 itens.append({
-                    "descricao": desc,
-                    "tipo": tipo,
+                    "descricao": desc, "tipo": tipo, "unidade": m.group(2),
                     "quantidade": self.br_money_to_float(m.group(3)),
-                    "valor_bruto": val_total,
-                    "tarifa_liquida": tarifa_liquida
+                    "preco_com_tributo": self.br_money_to_float(m.group(4)),
+                    "valor": val_total,
+                    "tarifa_liquida": tarifa_liq
                 })
         return itens
 
+    def extract_scee(self, text):
+        s_acum = self.safe_search(r"Saldo\s+Acumulado.*?\b(\d+)\b", text)
+        return {
+            "participa": "Demonstrativo" in text or "SCEE" in text,
+            "saldos": {"acumulado": {"tp": int(s_acum) if s_acum and s_acum.isdigit() else 0}}
+        }
+
     def extract_historicos(self, text):
-        # Pega os últimos 12 meses para o seu cálculo de média no VB6
-        pattern = r"([A-Z]{3}/\d{2})\s+([\d\.]+)\s+(\d+)"
+        pattern = r"([A-Z]{3})(\d{2})\s+([\d\.]+)\s+(\d+)"
         matches = re.findall(pattern, text)
-        regs = []
+        registros = []
         for m in matches:
-            regs.append({"mes": m[0], "kwh": int(m[1].replace('.', '')), "dias": int(m[2])})
-        return regs
+            registros.append({"mes": f"{m[0]}{m[1]}", "kwh": int(m[2].replace('.', '')), "dias": int(m[3])})
+        return registros
+
+    def extract_tributos(self, text):
+        tribs = {}
+        for t in ["ICMS", "PIS", "COFINS"]:
+            m = re.search(rf"{t}\s+([\d\.,]+)\s+([\d\.,]+)%\s+([\d\.,]+)", text)
+            if m: tribs[t.lower()] = {"base": self.br_money_to_float(m[1]), "valor": self.br_money_to_float(m[3])}
+        return tribs
