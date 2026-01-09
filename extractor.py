@@ -29,7 +29,11 @@ class CopelExtractor:
         return None
 
     def extract_cliente_info(self, text):
-        # --- NOVA DETECÇÃO: FASE E TAXA MÍNIMA ---
+        # Captura da UC - Refinada para ignorar falsos positivos
+        uc = self.safe_search(r"UNIDADE CONSUMIDORA\s*\n?\s*(\d{8,10})", text) or \
+             self.safe_search(r"(\d{9,10})\s*CÓDIGO DÉBITO", text)
+
+        # Fase e Taxa
         fase_str = self.safe_search(r"(Monofasico|Bifasico|Trifasico)\s*/\d+A", text)
         taxa_minima = 30
         if fase_str:
@@ -38,15 +42,13 @@ class CopelExtractor:
             elif "Bifasico" in fase_str:
                 taxa_minima = 50
 
-        # --- NOVA DETECÇÃO: GD1 OU GD2 ---
         regime = "GD1"
         if any(x in text.upper() for x in ["GD II", "GD 2", "14.300", "LEI 14300"]):
             regime = "GD2"
 
         return {
-            "nome": self.safe_search(r"Nome:\s*(.*?)\s*(?:Endereço|Enderezo|CNPJ|CPF)", text),
-            "uc": self.safe_search(r"UNIDADE CONSUMIDORA\s+(\d{8,10})", text) or self.safe_search(
-                r"(\d{8,10})\s+CÓDIGO DÉBITO", text),
+            "nome": self.safe_search(r"Nome:\s*(.*?)\s*\n", text),
+            "uc": uc,
             "cpf_cnpj": self.safe_search(r"(?:CNPJ|CPF):\s*([\d\.\-\/\*]+)", text),
             "tipo_fase": fase_str,
             "kwh_disponibilidade": taxa_minima,
@@ -60,16 +62,27 @@ class CopelExtractor:
         }
 
     def extract_fatura_dados(self, text):
+        # Procura especificamente o bloco REF / VENCIMENTO / TOTAL
+        # Evita pegar o 0001/06 do CNPJ da Copel
+        bloco_financeiro = self.safe_search(r"(\d{2}/\d{4})\s+(\d{2}/\d{2}/\d{4})\s+R\$\s*([\d\.,]+)", text, group=0)
+
+        if bloco_financeiro:
+            partes = bloco_financeiro.split()
+            return {
+                "mes_referencia": partes[0],
+                "vencimento": partes[1],
+                "valor_total": self.br_money_to_float(partes[2])
+            }
+
         return {
-            "mes_referencia": self.safe_search(r"REF\.\s*M[EÊ]S.*?(\d{2}/\d{4})", text) or self.safe_search(
-                r"(\d{2}/\d{4})", text),
-            "vencimento": self.safe_search(r"VENCIMENTO\s*(\d{2}/\d{2}/\d{4})", text) or self.safe_search(
-                r"(\d{2}/\d{2}/\d{4})", text),
-            "valor_total": self.br_money_to_float(self.safe_search(r"TOTAL\s+A\s+PAGAR\s+R\$\s*([\d\.,]+)", text))
+            "mes_referencia": self.safe_search(r"REF: MÊS / ANO\s*\n?\s*(\d{2}/\d{4})", text),
+            "vencimento": self.safe_search(r"VENCIMENTO\s*\n?\s*(\d{2}/\d{2}/\d{4})", text),
+            "valor_total": self.br_money_to_float(self.safe_search(r"TOTAL A PAGAR\s*\n?\s*R\$\s*([\d\.,]+)", text))
         }
 
     def extract_medicoes(self, text):
         registros = []
+        # Regex ajustada para capturar o Consumo e a Geração (como na conta do Consórcio)
         pattern = r"(\d{8,})\s+(CONSUMO|GERAC)\s+kWh\s*([A-Z]{2}|)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)"
         matches = re.findall(pattern, text)
         for m in matches:
@@ -86,21 +99,22 @@ class CopelExtractor:
 
     def extract_itens_faturados(self, text):
         itens = []
-        # Captura as 8 colunas da Copel, incluindo a última (Tarifa Líquida sem impostos)
+        # Captura ampliada para pegar as 8 colunas e identificar IP corretamente
         pattern = r"(.*?)\s+(kWh|UN|kW|kVArh)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+(-?[\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)\s+([\d\.,]+)"
-        for line in text.split('\n'):
+        lines = text.split('\n')
+        for line in lines:
             m = re.search(pattern, line)
             if m:
                 desc = self.normalize(m.group(1))
                 val_total = self.br_money_to_float(m.group(5))
-                tarifa_liq = self.br_money_to_float(m.group(8))  # Coluna Tarifa unit. (R$)
+                tarifa_liq = self.br_money_to_float(m.group(8))
 
                 tipo = "OUTROS"
                 if "CONSUMO" in desc.upper():
                     tipo = "TE"
                 elif "USO SISTEMA" in desc.upper() or "TUSD" in desc.upper():
                     tipo = "TUSD"
-                elif "ILUMINACAO" in desc.upper() or "ILUMIN PUBLICA" in desc.upper():
+                elif "ILUMIN" in desc.upper() or "CONT ILUM" in desc.upper():
                     tipo = "IP"
                 elif "INJ" in desc.upper() or val_total < 0:
                     tipo = "CREDITO"
@@ -115,18 +129,20 @@ class CopelExtractor:
         return itens
 
     def extract_scee(self, text):
-        s_acum = self.safe_search(r"Saldo\s+Acumulado.*?\b(\d+)\b", text)
+        # Saldo Acumulado (Para o Consórcio)
+        s_acum = self.safe_search(r"Saldo Acumulado.*?(\d+)", text)
         return {
-            "participa": "Demonstrativo" in text or "SCEE" in text,
+            "participa": "Demonstrativo" in text or "SCEE" in text or "GERAC" in text,
             "saldos": {"acumulado": {"tp": int(s_acum) if s_acum and s_acum.isdigit() else 0}}
         }
 
     def extract_historicos(self, text):
-        pattern = r"([A-Z]{3})(\d{2})\s+([\d\.]+)\s+(\d+)"
+        # Histórico de Consumo
+        pattern = r"([A-Z]{3}\d{2})\s+([\d\.]+)\s+(\d+)"
         matches = re.findall(pattern, text)
         registros = []
         for m in matches:
-            registros.append({"mes": f"{m[0]}{m[1]}", "kwh": int(m[2].replace('.', '')), "dias": int(m[3])})
+            registros.append({"mes": m[0], "kwh": int(m[1].replace('.', '')), "dias": int(m[2])})
         return registros
 
     def extract_tributos(self, text):
