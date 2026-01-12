@@ -23,13 +23,28 @@ class CopelExtractor:
         return self.normalize(m.group(group)) if m else None
 
     def extract_cliente_info(self, text):
-        # UC - Busca robusta
-        uc = self.safe_search(r"(?:UNIDADE CONSUMIDORA|UC)\s*[:\s]*(\d{9,10})", text) or \
-             self.safe_search(r"(?:\s|^)(\d{9,10})(?:\s|$)", text)
+        # 1. Busca UC ignorando números fixos da COPEL (Insc. Estadual e CNPJ)
+        # O findall vai listar todos os números de 8 a 10 dígitos encontrados
+        todos_numeros = re.findall(r"(?:\s|^)(\d{8,10})(?:\s|$)", text)
 
-        # Inteligência de Fase (Garantindo 30/50/100 para o seu lucro comercial)
+        uc = None
+        for candidato in todos_numeros:
+            # Lista de exclusão:
+            # 9023307399 (Insc. Estadual Copel)
+            # 04368898000106 (CNPJ Copel)
+            if candidato not in ["9023307399", "04368898000106", "04368898"]:
+                # UC da Copel geralmente tem 8 ou 9 dígitos
+                if 8 <= len(candidato) <= 9:
+                    uc = candidato
+                    break
+
+        # Fallback caso não ache pelo loop: tenta buscar pela palavra-chave no texto
+        if not uc:
+            uc = self.safe_search(r"UNIDADE CONSUMIDORA\s*[:\s]*(\d{8,9})", text)
+
+        # 2. Inteligência de Fase (Assina)
         fase_str = self.safe_search(r"(Monofasico|Bifasico|Trifasico)", text)
-        taxa_min = 100  # Padrão trifásico
+        taxa_min = 100
         if fase_str:
             if "Trifasico" in fase_str:
                 taxa_min = 100
@@ -37,6 +52,11 @@ class CopelExtractor:
                 taxa_min = 50
             elif "Monofasico" in fase_str:
                 taxa_min = 30
+
+        # 3. Captura e Limpeza de Endereço
+        logradouro = self.safe_search(r"Endereço:\s*(.*?)\s*CEP", text)
+        if logradouro and uc:
+            logradouro = logradouro.replace(uc, "").replace("  ", " ").strip()
 
         return {
             "nome": self.safe_search(r"Nome:\s*(.*?)\s*\n", text),
@@ -46,7 +66,7 @@ class CopelExtractor:
             "kwh_disponibilidade": taxa_min,
             "regime_gd": "GD2" if any(x in text.upper() for x in ["GD II", "GD 2", "14.300"]) else "GD1",
             "endereco": {
-                "logradouro": self.safe_search(r"Endereço:\s*(.*?)\s*CEP", text),
+                "logradouro": logradouro,
                 "cidade": self.safe_search(r"Cidade:\s*([A-Za-z\s\.\-]+)\s*-\s*Estado", text),
                 "estado": self.safe_search(r"Estado:\s*([A-Z]{2})", text),
                 "cep": self.safe_search(r"CEP:\s*(\d{5}-\d{3})", text)
