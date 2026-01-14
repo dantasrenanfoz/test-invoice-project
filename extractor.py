@@ -270,9 +270,25 @@ class CopelExtractor:
                     icms = 0.0
 
                 # Validação: descarta itens com valores absurdos (indicativo de parsing errado)
-                # Tarifa não pode ser > 100 reais por kWh
-                # Quantidade não pode ser > 100000 kWh (consumo residencial típico < 2000)
-                if abs(tarifa) > 100 or abs(quantidade) > 100000:
+                # Para ENERGIA: Tarifa não pode ser > 10 reais por kWh (proteção contra anos/datas)
+                # Para FINANCEIRO: Permite valores até R$ 10.000 (parcelamentos, multas grandes)
+                # Quantidade: não pode ser > 100000 kWh (consumo residencial típico < 2000)
+
+                if tipo in ['TE', 'TUSD', 'INJETADA', 'BANDEIRA']:
+                    # Energia: tarifa máxima R$ 10/kWh
+                    if abs(tarifa) > 10:
+                        continue
+                elif tipo == 'FINANCEIRO':
+                    # Financeiro: valor máximo R$ 10.000
+                    if abs(tarifa) > 10000:
+                        continue
+                else:
+                    # Outros: tarifa máxima R$ 1.000
+                    if abs(tarifa) > 1000:
+                        continue
+
+                # Quantidade: máximo 100.000 kWh
+                if abs(quantidade) > 100000:
                     continue
 
                 itens.append({

@@ -3,7 +3,7 @@ import json
 import pdfplumber
 from extractor import CopelExtractor
 
-# Configurações
+# ConfiguraÃ§Ãµes
 PASTA_PDFS = r"D:\filtrado"
 ARQUIVO_SAIDA = "resultado_todos_pdfs.txt"
 
@@ -16,11 +16,11 @@ def processar_pdf(caminho_pdf):
 
     try:
         with pdfplumber.open(caminho_pdf) as pdf:
-            # Extrai texto de todas as páginas e une em uma string
+            # Extrai texto de todas as pÃ¡ginas e une em uma string
             raw_text = "\n".join([page.extract_text() or "" for page in pdf.pages])
 
-        # MÉTODO AUTOMÁTICO: extract_all traz todos os módulos (histórico, tributos, solar, etc)
-        # Se novos campos forem adicionados no extrator, eles aparecerão aqui automaticamente.
+        # MÃ‰TODO AUTOMÃTICO: extract_all traz todos os mÃ³dulos (histÃ³rico, tributos, solar, etc)
+        # Se novos campos forem adicionados no extrator, eles aparecerÃ£o aqui automaticamente.
         dados_extraidos = ex.extract_all(raw_text)
 
         # Adiciona metadados do arquivo
@@ -30,11 +30,11 @@ def processar_pdf(caminho_pdf):
             "dados": dados_extraidos
         }
 
-        print(f"✔ Sucesso: {nome_arquivo}")
+        print(f"âœ” Sucesso: {nome_arquivo}")
         return resultado
 
     except Exception as e:
-        print(f"❌ Erro em {nome_arquivo}: {str(e)}")
+        print(f"âŒ Erro em {nome_arquivo}: {str(e)}")
         return {
             "arquivo": nome_arquivo,
             "status": "ERRO",
@@ -44,7 +44,7 @@ def processar_pdf(caminho_pdf):
 
 def main():
     if not os.path.exists(PASTA_PDFS):
-        print(f"Erro: A pasta {PASTA_PDFS} não existe.")
+        print(f"Erro: A pasta {PASTA_PDFS} nÃ£o existe.")
         return
 
     resultados = []
@@ -61,7 +61,7 @@ def main():
         res = processar_pdf(caminho)
         resultados.append(res)
 
-    # Gravação do arquivo de saída
+    # GravaÃ§Ã£o do arquivo de saÃ­da
     with open(ARQUIVO_SAIDA, "w", encoding="utf-8") as f:
         for r in resultados:
             f.write("=================================================\n")
@@ -71,7 +71,7 @@ def main():
             f.write(json.dumps(r.get("dados", r), ensure_ascii=False, indent=2))
             f.write("\n\n")
 
-    print(f"\n✅ Processamento concluído! Verifique o arquivo: {ARQUIVO_SAIDA}")
+    print(f"\nâœ… Processamento concluÃ­do! Verifique o arquivo: {ARQUIVO_SAIDA}")
 
 
 if __name__ == "__main__":

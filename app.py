@@ -39,7 +39,7 @@ async def processar_fatura(pdf: UploadFile = File(...)):
         # CONSUMIDA: Usa APENAS TE (Tarifa de Energia)
         # ⚠️ IMPORTANTE: TE e TUSD incidem sobre o MESMO kWh consumido!
         # Somar os dois dobraria o consumo real.
-        #
+        # 
         # Exemplo:
         # - Cliente consumiu 300 kWh
         # - Paga TE:   R$ 0,40/kWh × 300 = R$ 120,00
