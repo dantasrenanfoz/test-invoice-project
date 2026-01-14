@@ -40,15 +40,23 @@ class CopelExtractor:
         fatura = self.extract_fatura_dados(text)
         cliente = self.extract_cliente_info(text)
 
-        # CORREÇÃO #2: Limpeza de UC dentro do logradouro
-        # Agora funciona mesmo se UC estiver no logradouro mas não no campo uc
+        # CORREÇÃO #2 E ATENÇÃO A: Limpeza inteligente de UC no logradouro
         if cliente['endereco']['logradouro']:
             logradouro = cliente['endereco']['logradouro']
-            # Remove números de 7-10 dígitos que aparecem soltos no endereço
-            logradouro = re.sub(r'\s+\d{7,10}\s+', ' ', logradouro)
-            # Se temos UC identificada, remove ela especificamente
-            if cliente['uc']:
-                logradouro = logradouro.replace(cliente['uc'], "")
+
+            # Estratégia 1: Remove UC específica se identificada (apenas quando isolada)
+            if cliente['uc'] and len(cliente['uc']) >= 7:
+                # Remove UC apenas se ela aparecer isolada (com espaços, hífens ou no final)
+                # Isso evita remover números válidos do endereço (ex: "Rua 123")
+                pattern = rf"[\s\-,]+{re.escape(cliente['uc'])}(?=[\s\-,]|$)"
+                logradouro = re.sub(pattern, ' ', logradouro)
+
+            # Estratégia 2: Remove números de 7-10 dígitos isolados (provável UC)
+            # Mas apenas se estiverem no meio ou final, nunca parte do nome da rua
+            logradouro = re.sub(r'\s+\d{7,10}(?=\s+)', ' ', logradouro)  # No meio
+            logradouro = re.sub(r'\s+\d{7,10}$', '', logradouro)  # No final
+
+            # Normaliza espaços múltiplos
             cliente['endereco']['logradouro'] = re.sub(r'\s+', ' ', logradouro).strip()
 
         return {
@@ -177,8 +185,33 @@ class CopelExtractor:
             if any(k in desc.upper() for k in ["TOTAL", "SUBTOTAL", "BASE DE C", "INCLUSO"]):
                 continue
 
-            # Extrai todos os padrões numéricos
-            nums = re.findall(r"(-?[\d\.]*,\d+|-?\d+)", line)
+            # ============================================================================
+            # CORREÇÃO CRÍTICA A e B: Limpeza de padrões problemáticos ANTES de extrair números
+            # ============================================================================
+
+            # Guarda a linha original para a descrição
+            line_original = line
+
+            # Remove datas no formato MM/AAAA (ex: 08/2024, 07/2024)
+            # Isso evita capturar "08" e "2024" como números
+            line_clean = re.sub(r'\b\d{2}/\d{4}\b', '', line)
+
+            # Remove períodos P1, P2, etc. (ex: "BAND VM P1" → "BAND VM")
+            # Isso evita capturar o "1" ou "2" como quantidade
+            line_clean = re.sub(r'\sP\d+\b', '', line_clean)
+
+            # Remove formato de parcelas (ex: 004/012, 01/12)
+            # Isso evita capturar números de parcelas
+            line_clean = re.sub(r'\b\d{1,3}/\d{1,3}\b', '', line_clean)
+
+            # ============================================================================
+            # Extrai números APENAS da linha limpa
+            # ============================================================================
+
+            # Agora sim, extrai apenas números que são valores monetários ou quantidades
+            # Prioriza números com vírgula (valores monetários)
+            nums = re.findall(r"(-?[\d\.]*,\d+|-?\d+)", line_clean)
+
             if len(nums) < 2:
                 continue
 
@@ -195,7 +228,7 @@ class CopelExtractor:
                     tipo = "IP"
                 elif any(x in desc for x in ["MULTA", "JUROS", "MORA", "PARCEL", "ACRES"]):
                     tipo = "FINANCEIRO"
-                elif "BAND" in desc or "AMARELA" in desc or "VERMELHA" in desc:
+                elif "BAND" in desc or "AMARELA" in desc or "VERMELHA" in desc or "TRIB DIF" in desc:
                     tipo = "BANDEIRA"
                 elif "DEMANDA" in desc:
                     tipo = "DEMANDA"
@@ -208,7 +241,7 @@ class CopelExtractor:
                 quantidade = self.br_money_to_float(nums[0])
 
                 # Para itens financeiros sem quantidade (multa, juros)
-                if tipo == "FINANCEIRO" and "UN" in line and quantidade == 1:
+                if tipo == "FINANCEIRO" and "UN" in line_original and quantidade == 1:
                     tarifa = self.br_money_to_float(nums[1]) if len(nums) >= 2 else 0.0
                     valor_total = tarifa
                     icms = 0.0
@@ -221,7 +254,7 @@ class CopelExtractor:
                 # Para IP (iluminação pública)
                 elif tipo == "IP":
                     # Padrão: UN 1 25,780000 25,78
-                    if "UN" in line:
+                    if "UN" in line_original:
                         quantidade = 1
                         tarifa = self.br_money_to_float(nums[-1])
                         valor_total = tarifa
@@ -235,6 +268,12 @@ class CopelExtractor:
                     tarifa = self.br_money_to_float(nums[1]) if len(nums) >= 2 else 0.0
                     valor_total = self.br_money_to_float(nums[-1])
                     icms = 0.0
+
+                # Validação: descarta itens com valores absurdos (indicativo de parsing errado)
+                # Tarifa não pode ser > 100 reais por kWh
+                # Quantidade não pode ser > 100000 kWh (consumo residencial típico < 2000)
+                if abs(tarifa) > 100 or abs(quantidade) > 100000:
+                    continue
 
                 itens.append({
                     "descricao": desc,

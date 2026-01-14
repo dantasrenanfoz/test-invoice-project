@@ -1,0 +1,2948 @@
+=================================================
+ARQUIVO: BIFASICO_CL_032295_24678.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "CLAUDIMIR KERVALD",
+    "uc": "9143572",
+    "cpf_cnpj": "***.***.*49-49",
+    "endereco": {
+      "logradouro": "Av Br do Rio Branco, 115 - Dr Antonio Paranhos",
+      "cidade": "Sao Jorge Doeste",
+      "estado": "PR",
+      "cep": "85575-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "23/08/2024",
+    "valor_total": 252.25,
+    "data_emissao": "04/08/2024",
+    "proxima_leitura": "04/09/2024",
+    "chave_acesso": "41240804368898000106660031150369021076272021",
+    "numero_fatura": "FAT-01-20247007627202-1",
+    "hash_fisco": "4351.4EFC.CEB3.2375.4261.0E6A.3D03.52CD"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 266.0,
+      "tarifa_unitaria": 0.382519,
+      "valor_total": 101.75,
+      "icms": 5.23
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 266.0,
+      "tarifa_unitaria": 0.447895,
+      "valor_total": 119.14,
+      "icms": 6.12
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 224.44,
+      "tarifa_unitaria": 0.024862,
+      "valor_total": 5.58,
+      "icms": 0.29
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 25",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 25.78,
+      "valor_total": 25.78,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0041317927",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 5744,
+      "leitura_atual": 6010,
+      "consumo_kwh": 266
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 266,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 285,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 329,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 343,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 133,
+      "dias_faturados": 22
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 226.47,
+      "aliquota_percentual": 19.0,
+      "valor": 43.02
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 2.07
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 9.57
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "05/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "05/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: COM_BANDEIRA_CL_041632_41557.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "MARCOS VINICIUS SALATA",
+    "uc": "102509638",
+    "cpf_cnpj": "***.***.*09-32",
+    "endereco": {
+      "logradouro": "R Bandeirantes, 209 - Qd10 Lt01 Bela Vista IV Jd",
+      "cidade": "Colorado",
+      "estado": "PR",
+      "cep": "86690-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "02/2025",
+    "vencimento": "15/03/2025",
+    "valor_total": 397.76,
+    "data_emissao": "07/02/2025",
+    "proxima_leitura": "07/03/2025",
+    "chave_acesso": "41250204368898000106660031491837911051492301",
+    "numero_fatura": "FAT-01-20258465149230-85",
+    "hash_fisco": "9CC1.E14B.B498.3DB5.5DAD.EEC6.5C65.2E06"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO",
+      "tipo": "TE",
+      "quantidade": 416.0,
+      "tarifa_unitaria": 0.383774,
+      "valor_total": 159.65,
+      "icms": 8.61
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 416.0,
+      "tarifa_unitaria": 0.449447,
+      "valor_total": 186.97,
+      "icms": 10.09
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 51",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 51.14,
+      "valor_total": 51.14,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0370530467",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 14060,
+      "leitura_atual": 14476,
+      "consumo_kwh": 416
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "FEV25",
+      "consumo_kwh": 416,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JAN25",
+      "consumo_kwh": 339,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "DEZ24",
+      "consumo_kwh": 362,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "NOV24",
+      "consumo_kwh": 349,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT24",
+      "consumo_kwh": 311,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "SET24",
+      "consumo_kwh": 271,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 262,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 232,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 265,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 275,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 307,
+      "dias_faturados": 29
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 346.62,
+      "aliquota_percentual": 19.0,
+      "valor": 65.85
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "B - CONVENCIONAL",
+    "grupo_tarifario": "B",
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 0800 646 0012"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "05/01",
+      "data_fim": "05/02"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: COM_MULTA_JUROS_CL_032500_24746.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "IVO BURILLE",
+    "uc": "80387632",
+    "cpf_cnpj": "***.***.*89-53",
+    "endereco": {
+      "logradouro": "R Othon Maeder, 568 - 83216 01005 364002 - Yolanda",
+      "cidade": "Foz do Iguacu",
+      "estado": "PR",
+      "cep": "85853-520"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "26/08/2024",
+    "valor_total": 180.63,
+    "data_emissao": "08/08/2024",
+    "proxima_leitura": "06/09/2024",
+    "chave_acesso": "41240804368898000106660031160498441084344110",
+    "numero_fatura": null,
+    "hash_fisco": "FDAA.5588.7E6C.032F.C5D7.2660.0824.88CD"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.382072,
+      "valor_total": 95.9,
+      "icms": 4.85
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.44745,
+      "valor_total": 112.31,
+      "icms": 5.68
+    },
+    {
+      "descricao": "ENERGIA INJETADA TE 08/2024",
+      "tipo": "TE",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3094,
+      "valor_total": -30.94,
+      "icms": -1.93
+    },
+    {
+      "descricao": "ENERGIA INJETADA TUSD 08/2024",
+      "tipo": "TUSD",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3624,
+      "valor_total": -36.24,
+      "icms": -2.26
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 192.43,
+      "tarifa_unitaria": 0.024736,
+      "valor_total": 4.76,
+      "icms": 0.24
+    },
+    {
+      "descricao": "ENERGIA INJ. BAND. AMARELA TE",
+      "tipo": "INJETADA",
+      "quantidade": -76.67,
+      "tarifa_unitaria": 0.020087,
+      "valor_total": -1.54,
+      "icms": -0.1
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 3",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 3.46,
+      "valor_total": 3.46,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.34,
+      "valor_total": 0.34,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.07,
+      "valor_total": 0.07,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 32",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 30.0,
+      "valor_total": 30.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 15147,
+      "leitura_atual": 15398,
+      "consumo_kwh": 251
+    },
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "GERACAO",
+      "constante": 1,
+      "leitura_anterior": 11260,
+      "leitura_atual": 11360,
+      "consumo_kwh": 100
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 251,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 295,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 264,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 351,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 355,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 352,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 373,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 512,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 358,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 312,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 328,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 212.97,
+      "aliquota_percentual": 19.0,
+      "valor": 40.46
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 1.15
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 5.33
+    }
+  },
+  "solar_scee": {
+    "tipo": "GERADORA",
+    "uc_geradora": null,
+    "saldo_mes_kwh": 0.0,
+    "saldo_acumulado_kwh": 0.0,
+    "saldo_expirar_kwh": 0.0
+  },
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "09/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "07/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: CONSUMO_ZERO_CL_032269_24667.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "WAGNER DUARTE DE SOUZA",
+    "uc": "110250460",
+    "cpf_cnpj": "***.***.*17-95",
+    "endereco": {
+      "logradouro": "Av Pna Devige Crepaldi Schiavoni 1574 - Toquio Jd",
+      "cidade": "Maringa",
+      "estado": "PR",
+      "cep": "87025-820"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "06/2024",
+    "vencimento": "05/07/2024",
+    "valor_total": 550.82,
+    "data_emissao": "14/06/2024",
+    "proxima_leitura": "15/07/2024",
+    "chave_acesso": "41240604368898000106660031068501671070798128",
+    "numero_fatura": "FAT-01-20246567079812-5",
+    "hash_fisco": "A43B.FB15.02F2.0785.7CA7.30AE.0F1C.381B"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.394043,
+      "valor_total": 238.79,
+      "icms": 10.33
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.428251,
+      "valor_total": 259.52,
+      "icms": 11.22
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 52",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 52.51,
+      "valor_total": 52.51,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0420479894",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 5399,
+      "leitura_atual": 6005,
+      "consumo_kwh": 606
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 606,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 560,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 626,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 678,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 562,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 599,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 564,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 489,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 476,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "SET23",
+      "consumo_kwh": 439,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "AGO23",
+      "consumo_kwh": 100,
+      "dias_faturados": 31
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 498.31,
+      "aliquota_percentual": 19.0,
+      "valor": 94.68
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 3.84
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 17.71
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "15/05",
+      "data_fim": "13/06"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: DEBITO_AUTOMATICO_CL_032533_24749.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "OSMAR BENEDITO DENARDI",
+    "uc": "15853209",
+    "cpf_cnpj": "***.***.*09-04",
+    "endereco": {
+      "logradouro": "Est Piuna - Lt245a2 Sitio Sao Benedito - Rural",
+      "cidade": "Nova Esperanca",
+      "estado": "PR",
+      "cep": "87600-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "01/09/2024",
+    "valor_total": 392.48,
+    "data_emissao": "08/08/2024",
+    "proxima_leitura": "06/09/2024",
+    "chave_acesso": "41240804368898000106660031159788781083618109",
+    "numero_fatura": "FAT-01-20247028361810-54",
+    "hash_fisco": "FE84.A2A4.CA14.B3A9.505A.8C8A.DF76.01EA"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 571.0,
+      "tarifa_unitaria": 0.309492,
+      "valor_total": 176.72,
+      "icms": 11.03
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 571.0,
+      "tarifa_unitaria": 0.362452,
+      "valor_total": 206.96,
+      "icms": 12.93
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 437.77,
+      "tarifa_unitaria": 0.020102,
+      "valor_total": 8.8,
+      "icms": 0.55
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0982341359",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 39378,
+      "leitura_atual": 39949,
+      "consumo_kwh": 571
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 571,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 431,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 588,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 589,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 653,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 596,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 612,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 581,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 605,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 605,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 609,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 4.36
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 20.15
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B2 Rural / Criacao de Bovinos P Leite Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "09/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "07/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: GD1_CL_033418_25567.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "MARCUS RAMOS BUSS",
+    "uc": "92924719",
+    "cpf_cnpj": "***.***.*70-08",
+    "endereco": {
+      "logradouro": "Av Inglaterra Dois, 465 - Q02a Lt11b Jd Europa",
+      "cidade": "Assis Chateaubriand",
+      "estado": "PR",
+      "cep": "85935-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "09/2024",
+    "vencimento": "26/09/2024",
+    "valor_total": 188.54,
+    "data_emissao": "07/09/2024",
+    "proxima_leitura": "08/10/2024",
+    "chave_acesso": "41240904368898000106660031212197371071628368",
+    "numero_fatura": "FAT-01-20247257162836-18",
+    "hash_fisco": "B98E.1E0C.4A68.74D0.0FF6.B658.30AF.57FB"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 385.0,
+      "tarifa_unitaria": 0.378623,
+      "valor_total": 145.77,
+      "icms": 6.36
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 385.0,
+      "tarifa_unitaria": 0.443377,
+      "valor_total": 170.7,
+      "icms": 7.44
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TE 07/2024 GDI",
+      "tipo": "TE",
+      "quantidade": -146.0,
+      "tarifa_unitaria": 0.290137,
+      "valor_total": -42.36,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TUSD 07/2024 GDI",
+      "tipo": "TUSD",
+      "quantidade": -146.0,
+      "tarifa_unitaria": 0.339795,
+      "valor_total": -49.61,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TE 07/2024 GDI",
+      "tipo": "TE",
+      "quantidade": -48.0,
+      "tarifa_unitaria": 0.29,
+      "valor_total": -13.92,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TUSD 07/2024 GDI",
+      "tipo": "TUSD",
+      "quantidade": -48.0,
+      "tarifa_unitaria": 0.339792,
+      "valor_total": -16.31,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TE 08/2024 GDI",
+      "tipo": "TE",
+      "quantidade": -141.0,
+      "tarifa_unitaria": 0.290142,
+      "valor_total": -40.91,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TUSD 08/2024 GDI",
+      "tipo": "TUSD",
+      "quantidade": -141.0,
+      "tarifa_unitaria": 0.339787,
+      "valor_total": -47.91,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA CONS. B.VERMELHA",
+      "tipo": "BANDEIRA",
+      "quantidade": 79.66,
+      "tarifa_unitaria": 0.058251,
+      "valor_total": 4.64,
+      "icms": 0.21
+    },
+    {
+      "descricao": "ENERGIA INJ. BAND. VERMELHA TE P1",
+      "tipo": "TE",
+      "quantidade": -69.31,
+      "tarifa_unitaria": 0.044582,
+      "valor_total": -3.09,
+      "icms": 0.0
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 2",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 2.19,
+      "valor_total": 2.19,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.32,
+      "valor_total": 0.32,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.12,
+      "valor_total": 0.12,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 78",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 30.0,
+      "valor_total": 30.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0324031104",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 28513,
+      "leitura_atual": 28898,
+      "consumo_kwh": 385
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "SET24",
+      "consumo_kwh": 385,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 380,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 390,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 377,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 475,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 547,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 573,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 190,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 352,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 335,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 409,
+      "dias_faturados": 32
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 321.11,
+      "aliquota_percentual": 19.0,
+      "valor": 61.0
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 2.51
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 11.5
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "09/08",
+      "data_fim": "31/08"
+    },
+    {
+      "tipo": "Vermelha",
+      "periodo": "1",
+      "data_inicio": "01/09",
+      "data_fim": "06/09"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: GD2_CL_032500_24746.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "IVO BURILLE",
+    "uc": "80387632",
+    "cpf_cnpj": "***.***.*89-53",
+    "endereco": {
+      "logradouro": "R Othon Maeder, 568 - 83216 01005 364002 - Yolanda",
+      "cidade": "Foz do Iguacu",
+      "estado": "PR",
+      "cep": "85853-520"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "26/08/2024",
+    "valor_total": 180.63,
+    "data_emissao": "08/08/2024",
+    "proxima_leitura": "06/09/2024",
+    "chave_acesso": "41240804368898000106660031160498441084344110",
+    "numero_fatura": null,
+    "hash_fisco": "FDAA.5588.7E6C.032F.C5D7.2660.0824.88CD"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.382072,
+      "valor_total": 95.9,
+      "icms": 4.85
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.44745,
+      "valor_total": 112.31,
+      "icms": 5.68
+    },
+    {
+      "descricao": "ENERGIA INJETADA TE 08/2024",
+      "tipo": "TE",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3094,
+      "valor_total": -30.94,
+      "icms": -1.93
+    },
+    {
+      "descricao": "ENERGIA INJETADA TUSD 08/2024",
+      "tipo": "TUSD",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3624,
+      "valor_total": -36.24,
+      "icms": -2.26
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 192.43,
+      "tarifa_unitaria": 0.024736,
+      "valor_total": 4.76,
+      "icms": 0.24
+    },
+    {
+      "descricao": "ENERGIA INJ. BAND. AMARELA TE",
+      "tipo": "INJETADA",
+      "quantidade": -76.67,
+      "tarifa_unitaria": 0.020087,
+      "valor_total": -1.54,
+      "icms": -0.1
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 3",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 3.46,
+      "valor_total": 3.46,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.34,
+      "valor_total": 0.34,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.07,
+      "valor_total": 0.07,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 32",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 30.0,
+      "valor_total": 30.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 15147,
+      "leitura_atual": 15398,
+      "consumo_kwh": 251
+    },
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "GERACAO",
+      "constante": 1,
+      "leitura_anterior": 11260,
+      "leitura_atual": 11360,
+      "consumo_kwh": 100
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 251,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 295,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 264,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 351,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 355,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 352,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 373,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 512,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 358,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 312,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 328,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 212.97,
+      "aliquota_percentual": 19.0,
+      "valor": 40.46
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 1.15
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 5.33
+    }
+  },
+  "solar_scee": {
+    "tipo": "GERADORA",
+    "uc_geradora": null,
+    "saldo_mes_kwh": 0.0,
+    "saldo_acumulado_kwh": 0.0,
+    "saldo_expirar_kwh": 0.0
+  },
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "09/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "07/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: GD_COM_SCEE_CL_032500_24746.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "IVO BURILLE",
+    "uc": "80387632",
+    "cpf_cnpj": "***.***.*89-53",
+    "endereco": {
+      "logradouro": "R Othon Maeder, 568 - 83216 01005 364002 - Yolanda",
+      "cidade": "Foz do Iguacu",
+      "estado": "PR",
+      "cep": "85853-520"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "26/08/2024",
+    "valor_total": 180.63,
+    "data_emissao": "08/08/2024",
+    "proxima_leitura": "06/09/2024",
+    "chave_acesso": "41240804368898000106660031160498441084344110",
+    "numero_fatura": null,
+    "hash_fisco": "FDAA.5588.7E6C.032F.C5D7.2660.0824.88CD"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.382072,
+      "valor_total": 95.9,
+      "icms": 4.85
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 251.0,
+      "tarifa_unitaria": 0.44745,
+      "valor_total": 112.31,
+      "icms": 5.68
+    },
+    {
+      "descricao": "ENERGIA INJETADA TE 08/2024",
+      "tipo": "TE",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3094,
+      "valor_total": -30.94,
+      "icms": -1.93
+    },
+    {
+      "descricao": "ENERGIA INJETADA TUSD 08/2024",
+      "tipo": "TUSD",
+      "quantidade": -100.0,
+      "tarifa_unitaria": 0.3624,
+      "valor_total": -36.24,
+      "icms": -2.26
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 192.43,
+      "tarifa_unitaria": 0.024736,
+      "valor_total": 4.76,
+      "icms": 0.24
+    },
+    {
+      "descricao": "ENERGIA INJ. BAND. AMARELA TE",
+      "tipo": "INJETADA",
+      "quantidade": -76.67,
+      "tarifa_unitaria": 0.020087,
+      "valor_total": -1.54,
+      "icms": -0.1
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 3",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 3.46,
+      "valor_total": 3.46,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.34,
+      "valor_total": 0.34,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 0",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 0.07,
+      "valor_total": 0.07,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 32",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 30.0,
+      "valor_total": 30.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 15147,
+      "leitura_atual": 15398,
+      "consumo_kwh": 251
+    },
+    {
+      "numero_medidor": "0390773171",
+      "tipo": "GERACAO",
+      "constante": 1,
+      "leitura_anterior": 11260,
+      "leitura_atual": 11360,
+      "consumo_kwh": 100
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 251,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 295,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 264,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 351,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 355,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 352,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 373,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 512,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 358,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 312,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 328,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 212.97,
+      "aliquota_percentual": 19.0,
+      "valor": 40.46
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 1.15
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 5.33
+    }
+  },
+  "solar_scee": {
+    "tipo": "GERADORA",
+    "uc_geradora": null,
+    "saldo_mes_kwh": 0.0,
+    "saldo_acumulado_kwh": 0.0,
+    "saldo_expirar_kwh": 0.0
+  },
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "09/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "07/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: LMR_PLURIMENSAL_CL_032533_24749.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "OSMAR BENEDITO DENARDI",
+    "uc": "15853209",
+    "cpf_cnpj": "***.***.*09-04",
+    "endereco": {
+      "logradouro": "Est Piuna - Lt245a2 Sitio Sao Benedito - Rural",
+      "cidade": "Nova Esperanca",
+      "estado": "PR",
+      "cep": "87600-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "08/2024",
+    "vencimento": "01/09/2024",
+    "valor_total": 392.48,
+    "data_emissao": "08/08/2024",
+    "proxima_leitura": "06/09/2024",
+    "chave_acesso": "41240804368898000106660031159788781083618109",
+    "numero_fatura": "FAT-01-20247028361810-54",
+    "hash_fisco": "FE84.A2A4.CA14.B3A9.505A.8C8A.DF76.01EA"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 571.0,
+      "tarifa_unitaria": 0.309492,
+      "valor_total": 176.72,
+      "icms": 11.03
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 571.0,
+      "tarifa_unitaria": 0.362452,
+      "valor_total": 206.96,
+      "icms": 12.93
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 437.77,
+      "tarifa_unitaria": 0.020102,
+      "valor_total": 8.8,
+      "icms": 0.55
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0982341359",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 39378,
+      "leitura_atual": 39949,
+      "consumo_kwh": 571
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 571,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 431,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 588,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 589,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 653,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 596,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 612,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 581,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 605,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 605,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 609,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 4.36
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 20.15
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B2 Rural / Criacao de Bovinos P Leite Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "09/07",
+      "data_fim": "31/07"
+    },
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "01/08",
+      "data_fim": "07/08"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: MONOFASICO_CL_034455_27373.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "ADRIANA APARECIDA ALVES",
+    "uc": "98629824",
+    "cpf_cnpj": "008.928.659-62",
+    "endereco": {
+      "logradouro": "Ass Assentamento Eli Vive I, 131 Sitio Sagrado Coracao de Jesus - Rural",
+      "cidade": "Londrina",
+      "estado": "PR",
+      "cep": "86123-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "09/2024",
+    "vencimento": "05/10/2024",
+    "valor_total": 530.44,
+    "data_emissao": "13/09/2024",
+    "proxima_leitura": "15/10/2024",
+    "chave_acesso": "41240904368898000106660031226239601070182410",
+    "numero_fatura": "FAT-01-20247307018241-39",
+    "hash_fisco": "56B6.700B.7E72.C080.0880.8B9A.3743.7EDE"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO",
+      "tipo": "TE",
+      "quantidade": 736.0,
+      "tarifa_unitaria": 0.306916,
+      "valor_total": 225.89,
+      "icms": 12.32
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 736.0,
+      "tarifa_unitaria": 0.359416,
+      "valor_total": 264.53,
+      "icms": 14.43
+    },
+    {
+      "descricao": "ENERGIA CONS. B.VERMELHA",
+      "tipo": "BANDEIRA",
+      "quantidade": 318.93,
+      "tarifa_unitaria": 0.047189,
+      "valor_total": 15.05,
+      "icms": 0.82
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 15",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 15.79,
+      "valor_total": 15.79,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 6",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 6.57,
+      "valor_total": 6.57,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 2",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 2.61,
+      "valor_total": 2.61,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0351476087",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 26307,
+      "leitura_atual": 27043,
+      "consumo_kwh": 736
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "SET24",
+      "consumo_kwh": 736,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 435,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 562,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 598,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 711,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 412,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 675,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 596,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 452,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 575,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 568,
+      "dias_faturados": 29
+    }
+  ],
+  "tributos": {
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 4.93
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 22.64
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B2 Rural / Cultivo de Milho Monofasico Rural",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Monofasico",
+    "disponibilidade_kwh": 30,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "15/08",
+      "data_fim": "31/08"
+    },
+    {
+      "tipo": "Vermelha",
+      "periodo": "1",
+      "data_inicio": "01/09",
+      "data_fim": "13/09"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: PADRAO_CL_032269_24667.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "WAGNER DUARTE DE SOUZA",
+    "uc": "110250460",
+    "cpf_cnpj": "***.***.*17-95",
+    "endereco": {
+      "logradouro": "Av Pna Devige Crepaldi Schiavoni 1574 - Toquio Jd",
+      "cidade": "Maringa",
+      "estado": "PR",
+      "cep": "87025-820"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "06/2024",
+    "vencimento": "05/07/2024",
+    "valor_total": 550.82,
+    "data_emissao": "14/06/2024",
+    "proxima_leitura": "15/07/2024",
+    "chave_acesso": "41240604368898000106660031068501671070798128",
+    "numero_fatura": "FAT-01-20246567079812-5",
+    "hash_fisco": "A43B.FB15.02F2.0785.7CA7.30AE.0F1C.381B"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.394043,
+      "valor_total": 238.79,
+      "icms": 10.33
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.428251,
+      "valor_total": 259.52,
+      "icms": 11.22
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 52",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 52.51,
+      "valor_total": 52.51,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0420479894",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 5399,
+      "leitura_atual": 6005,
+      "consumo_kwh": 606
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 606,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 560,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 626,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 678,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 562,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 599,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 564,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 489,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 476,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "SET23",
+      "consumo_kwh": 439,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "AGO23",
+      "consumo_kwh": 100,
+      "dias_faturados": 31
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 498.31,
+      "aliquota_percentual": 19.0,
+      "valor": 94.68
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 3.84
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 17.71
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "15/05",
+      "data_fim": "13/06"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: PARCELAMENTO_CL_034586_27593.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "ROSANGELA PEREIRA DE SOUZA",
+    "uc": "105719854",
+    "cpf_cnpj": "***.***.*39-15",
+    "endereco": {
+      "logradouro": "R Pelicano, 19 - Frente - Olimpico Jd",
+      "cidade": "Maringa",
+      "estado": "PR",
+      "cep": "87070-340"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "07/2024",
+    "vencimento": "28/08/2024",
+    "valor_total": 260.97,
+    "data_emissao": "23/07/2024",
+    "proxima_leitura": "21/08/2024",
+    "chave_acesso": "41240704368898000106660031134874251042210809",
+    "numero_fatura": "FAT-01-20246894221080-50",
+    "hash_fisco": "12C9.DF40.5347.735C.086F.95C1.3CF1.6D13"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 295.0,
+      "tarifa_unitaria": 0.382746,
+      "valor_total": 112.91,
+      "icms": 5.53
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 295.0,
+      "tarifa_unitaria": 0.445119,
+      "valor_total": 131.31,
+      "icms": 6.43
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TE 06/2024",
+      "tipo": "TE",
+      "quantidade": -86.0,
+      "tarifa_unitaria": 0.291279,
+      "valor_total": -25.05,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TUSD 06/2024",
+      "tipo": "TUSD",
+      "quantidade": -86.0,
+      "tarifa_unitaria": 0.338721,
+      "valor_total": -29.13,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TE 07/2024",
+      "tipo": "TE",
+      "quantidade": -159.0,
+      "tarifa_unitaria": 0.291258,
+      "valor_total": -46.31,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA INJ. OUC MPT TUSD 07/2024",
+      "tipo": "TUSD",
+      "quantidade": -159.0,
+      "tarifa_unitaria": 0.338742,
+      "valor_total": -53.86,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA CONS. B.AMARELA",
+      "tipo": "BANDEIRA",
+      "quantidade": 202.81,
+      "tarifa_unitaria": 0.024703,
+      "valor_total": 5.01,
+      "icms": 0.24
+    },
+    {
+      "descricao": "ENERGIA INJ. BAND. AMARELA TE",
+      "tipo": "INJETADA",
+      "quantidade": -168.44,
+      "tarifa_unitaria": 0.01882,
+      "valor_total": -3.17,
+      "icms": 0.0
+    },
+    {
+      "descricao": "MULTA POR ATRASO NO PAGAMENTO UN 1 6",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 6.1,
+      "valor_total": 6.1,
+      "icms": 0.0
+    },
+    {
+      "descricao": "JUROS CONTA ANTERIOR UN 1 3",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 3.34,
+      "valor_total": 3.34,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ACRESCIMO MORATORIO UN 1 1",
+      "tipo": "FINANCEIRO",
+      "quantidade": 1.0,
+      "tarifa_unitaria": 1.52,
+      "valor_total": 1.52,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 33",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 32.0,
+      "valor_total": 32.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0391633783",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 19401,
+      "leitura_atual": 19696,
+      "consumo_kwh": 295
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 295,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 263,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 411,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 506,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 609,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 526,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 578,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 411,
+      "dias_faturados": 28
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 446,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 526,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "SET23",
+      "consumo_kwh": 237,
+      "dias_faturados": 30
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 249.23,
+      "aliquota_percentual": 19.0,
+      "valor": 47.35
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 2.16
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 10.04
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [
+      {
+        "mes_ano": "05/2024",
+        "valor": 315.63
+      }
+    ],
+    "total_debitos": 315.63,
+    "quantidade_faturas_atrasadas": 1,
+    "aviso_corte": true,
+    "fatura_paga": false
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "21/06",
+      "data_fim": "30/06"
+    },
+    {
+      "tipo": "Amarela",
+      "periodo": null,
+      "data_inicio": "01/07",
+      "data_fim": "22/07"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: TARIFA_SOCIAL_CL_036173_32805.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "FRANCISCA IVANIA RODRIGUES",
+    "uc": "51477890",
+    "cpf_cnpj": "***.***.*93-17",
+    "endereco": {
+      "logradouro": "R Joao Nobuyochi Yamakawa, 372 Centro",
+      "cidade": "Amapora",
+      "estado": "PR",
+      "cep": "87850-000"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "10/2024",
+    "vencimento": "21/10/2024",
+    "valor_total": 0.0,
+    "data_emissao": "04/10/2024",
+    "proxima_leitura": "04/11/2024",
+    "chave_acesso": "41241004368898000106660031259343641000448886",
+    "numero_fatura": "FAT-01-20247440044888-36",
+    "hash_fisco": "2924.59AA.A6E2.699B.496D.577B.72A5.74ED"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P2",
+      "tipo": "BANDEIRA",
+      "quantidade": -3.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P2",
+      "tipo": "BANDEIRA",
+      "quantidade": -7.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P2",
+      "tipo": "BANDEIRA",
+      "quantidade": -12.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P2",
+      "tipo": "BANDEIRA",
+      "quantidade": -26.5,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P1",
+      "tipo": "BANDEIRA",
+      "quantidade": -27.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P1",
+      "tipo": "BANDEIRA",
+      "quantidade": -63.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P1",
+      "tipo": "BANDEIRA",
+      "quantidade": -108.0,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "ENERGIA TRIB DIF BAND VM P1",
+      "tipo": "BANDEIRA",
+      "quantidade": -238.5,
+      "tarifa_unitaria": 0.0,
+      "valor_total": 0.0,
+      "icms": 0.0
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 0",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 32.0,
+      "valor_total": 32.0,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0410676485",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 4404,
+      "leitura_atual": 4889,
+      "consumo_kwh": 485
+    },
+    {
+      "numero_medidor": "0410676485",
+      "tipo": "GERACAO",
+      "constante": 1,
+      "leitura_anterior": 4593,
+      "leitura_atual": 5104,
+      "consumo_kwh": 511
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "OUT24",
+      "consumo_kwh": 485,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "SET24",
+      "consumo_kwh": 482,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "AGO24",
+      "consumo_kwh": 313,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUL24",
+      "consumo_kwh": 256,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 394,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 417,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 448,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 452,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 514,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 554,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 456,
+      "dias_faturados": 31
+    }
+  ],
+  "tributos": {},
+  "solar_scee": {
+    "tipo": "GERADORA",
+    "uc_geradora": null,
+    "saldo_mes_kwh": 0.0,
+    "saldo_acumulado_kwh": 1382.0,
+    "saldo_expirar_kwh": 0.0
+  },
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Baixa Renda Bifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Bifasico",
+    "disponibilidade_kwh": 50,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": true,
+    "responsavel_iluminacao": "Municipio"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Vermelha",
+      "periodo": "1",
+      "data_inicio": "04/09",
+      "data_fim": "30/09"
+    },
+    {
+      "tipo": "Vermelha",
+      "periodo": "2",
+      "data_inicio": "01/10",
+      "data_fim": "03/10"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: TRIFASICO_CL_032269_24667.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "WAGNER DUARTE DE SOUZA",
+    "uc": "110250460",
+    "cpf_cnpj": "***.***.*17-95",
+    "endereco": {
+      "logradouro": "Av Pna Devige Crepaldi Schiavoni 1574 - Toquio Jd",
+      "cidade": "Maringa",
+      "estado": "PR",
+      "cep": "87025-820"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "06/2024",
+    "vencimento": "05/07/2024",
+    "valor_total": 550.82,
+    "data_emissao": "14/06/2024",
+    "proxima_leitura": "15/07/2024",
+    "chave_acesso": "41240604368898000106660031068501671070798128",
+    "numero_fatura": "FAT-01-20246567079812-5",
+    "hash_fisco": "A43B.FB15.02F2.0785.7CA7.30AE.0F1C.381B"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.394043,
+      "valor_total": 238.79,
+      "icms": 10.33
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.428251,
+      "valor_total": 259.52,
+      "icms": 11.22
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 52",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 52.51,
+      "valor_total": 52.51,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0420479894",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 5399,
+      "leitura_atual": 6005,
+      "consumo_kwh": 606
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 606,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 560,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 626,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 678,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 562,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 599,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 564,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 489,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 476,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "SET23",
+      "consumo_kwh": 439,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "AGO23",
+      "consumo_kwh": 100,
+      "dias_faturados": 31
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 498.31,
+      "aliquota_percentual": 19.0,
+      "valor": 94.68
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 3.84
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 17.71
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "15/05",
+      "data_fim": "13/06"
+    }
+  ]
+}
+
+=================================================
+ARQUIVO: UC_RECENTE_CL_032269_24667.PDF
+STATUS : OK
+
+{
+  "cliente": {
+    "nome": "WAGNER DUARTE DE SOUZA",
+    "uc": "110250460",
+    "cpf_cnpj": "***.***.*17-95",
+    "endereco": {
+      "logradouro": "Av Pna Devige Crepaldi Schiavoni 1574 - Toquio Jd",
+      "cidade": "Maringa",
+      "estado": "PR",
+      "cep": "87025-820"
+    }
+  },
+  "fatura": {
+    "mes_referencia": "06/2024",
+    "vencimento": "05/07/2024",
+    "valor_total": 550.82,
+    "data_emissao": "14/06/2024",
+    "proxima_leitura": "15/07/2024",
+    "chave_acesso": "41240604368898000106660031068501671070798128",
+    "numero_fatura": "FAT-01-20246567079812-5",
+    "hash_fisco": "A43B.FB15.02F2.0785.7CA7.30AE.0F1C.381B"
+  },
+  "itens": [
+    {
+      "descricao": "ENERGIA ELET CONSUMO S",
+      "tipo": "TE",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.394043,
+      "valor_total": 238.79,
+      "icms": 10.33
+    },
+    {
+      "descricao": "ENERGIA ELET USO SISTEMA",
+      "tipo": "TUSD",
+      "quantidade": 606.0,
+      "tarifa_unitaria": 0.428251,
+      "valor_total": 259.52,
+      "icms": 11.22
+    },
+    {
+      "descricao": "CONT ILUMIN PUBLICA MUNICIPIO UN 1 52",
+      "tipo": "IP",
+      "quantidade": 1,
+      "tarifa_unitaria": 52.51,
+      "valor_total": 52.51,
+      "icms": 0.0
+    }
+  ],
+  "medicoes": [
+    {
+      "numero_medidor": "0420479894",
+      "tipo": "CONSUMO",
+      "constante": 1,
+      "leitura_anterior": 5399,
+      "leitura_atual": 6005,
+      "consumo_kwh": 606
+    }
+  ],
+  "historico": [
+    {
+      "mes_ano": "JUN24",
+      "consumo_kwh": 606,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "MAI24",
+      "consumo_kwh": 560,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "ABR24",
+      "consumo_kwh": 626,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "MAR24",
+      "consumo_kwh": 678,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "FEV24",
+      "consumo_kwh": 562,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "JAN24",
+      "consumo_kwh": 599,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "DEZ23",
+      "consumo_kwh": 564,
+      "dias_faturados": 30
+    },
+    {
+      "mes_ano": "NOV23",
+      "consumo_kwh": 489,
+      "dias_faturados": 29
+    },
+    {
+      "mes_ano": "OUT23",
+      "consumo_kwh": 476,
+      "dias_faturados": 32
+    },
+    {
+      "mes_ano": "SET23",
+      "consumo_kwh": 439,
+      "dias_faturados": 31
+    },
+    {
+      "mes_ano": "AGO23",
+      "consumo_kwh": 100,
+      "dias_faturados": 31
+    }
+  ],
+  "tributos": {
+    "icms": {
+      "base_calculo": 498.31,
+      "aliquota_percentual": 19.0,
+      "valor": 94.68
+    },
+    "pis": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 1.11,
+      "valor": 3.84
+    },
+    "cofins": {
+      "base_calculo": 0.0,
+      "aliquota_percentual": 5.13,
+      "valor": 17.71
+    }
+  },
+  "solar_scee": null,
+  "avisos_debitos": {
+    "debitos_anteriores": [],
+    "total_debitos": 0,
+    "quantidade_faturas_atrasadas": 0,
+    "aviso_corte": false,
+    "fatura_paga": true
+  },
+  "tecnico": {
+    "classificacao": "B1 Residencial / Residencial Trifasico",
+    "tipo_fornecimento": null,
+    "tipo_fase": "Trifasico",
+    "disponibilidade_kwh": 100,
+    "tensao_nominal": null,
+    "disjuntor": "50A",
+    "modalidade_tarifaria": "CONVENCIONAL",
+    "grupo_tarifario": null,
+    "tarifa_social": false,
+    "responsavel_iluminacao": "Municipio 156"
+  },
+  "bandeiras": [
+    {
+      "tipo": "Verde",
+      "periodo": null,
+      "data_inicio": "15/05",
+      "data_fim": "13/06"
+    }
+  ]
+}
+
