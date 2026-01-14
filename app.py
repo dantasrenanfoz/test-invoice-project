@@ -1,93 +1,42 @@
 from fastapi import FastAPI, UploadFile, File
 import pdfplumber
-import os
+import io
 import re
 from extractor import CopelExtractor
 
-app = FastAPI(title="Assina Energy API PRO")
+app = FastAPI(title="Lex Energia Clone API PRO")
 ex = CopelExtractor()
 
 
-@app.post("/ler-fatura-pdf")
-async def ler_fatura(pdf: UploadFile = File(...)):
-    temp_path = f"temp_{pdf.filename}"
-    content = await pdf.read()
-    with open(temp_path, "wb") as buffer:
-        buffer.write(content)
-
+@app.post("/processar-fatura")
+async def processar_fatura(pdf: UploadFile = File(...)):
     try:
-        with pdfplumber.open(temp_path) as p:
+        content = await pdf.read()
+        with pdfplumber.open(io.BytesIO(content)) as p:
             raw_text = "\n".join([page.extract_text() or "" for page in p.pages])
 
-        cliente = ex.extract_cliente_info(raw_text)
-        fatura = ex.extract_fatura_dados(raw_text)
-        medicoes = ex.extract_medicoes(raw_text)
-        itens = ex.extract_itens_faturados(raw_text)
-        scee = ex.extract_scee(raw_text)
-        historicos = ex.extract_historicos(raw_text)
-        tributos = ex.extract_tributos(raw_text)
+        # Extração massiva
+        dados = ex.extract_all(raw_text)
 
-        # 1. Lógica de Tipo de Unidade
-        tem_linha_geracao = any(m['tipo'] == 'GERACAO' for m in medicoes)
-        tipo_unidade = "UC (Consumo)"
-        if tem_linha_geracao:
-            tipo_unidade = "USINA (Geradora)"
-        elif scee.get("participa"):
-            tipo_unidade = "UC Beneficiária (GD)"
+        # Inteligência Adicional (Cálculos de Economia e Chave)
+        itens = dados['itens']
+        inj = sum(abs(i['quantidade']) for i in itens if i['tipo'] == "INJETADA")
+        cons = sum(i['quantidade'] for i in itens if i['tipo'] in ["TE", "TUSD"] and i['quantidade'] > 0)
 
-        # 2. Inteligência Assina (Tarifa Líquida Total TE + TUSD)
-        # Busca no consumo positivo primeiro
-        t_te = next((i['tarifa_liquida'] for i in itens if i['tipo'] == "TE"), 0)
-        t_tusd = next((i['tarifa_liquida'] for i in itens if i['tipo'] == "TUSD"), 0)
+        # Captura Chave de Acesso (44 dígitos)
+        chave = re.sub(r"\s+", "", ex.safe_search(r"Chave de Acesso\s*([\d\s]{44,})", raw_text) or "")
 
-        # Se for 100% crédito, busca nos itens de injeção
-        if t_te == 0:
-            t_te = next(
-                (i['tarifa_liquida'] for i in itens if "TE" in i['descricao'].upper() and i['tipo'] == "INJETADA"), 0)
-        if t_tusd == 0:
-            t_tusd = next(
-                (i['tarifa_liquida'] for i in itens if "TUS" in i['descricao'].upper() and i['tipo'] == "INJETADA"), 0)
-
-        valor_ip = next((i['valor'] for i in itens if i['tipo'] == "IP"), 0)
-
-        # 3. Energia Compensada (Usa o MAX para não somar TE + TUSD e triplicar o volume)
-        injetadas = [i['quantidade'] for i in itens if i['tipo'] == "INJETADA"]
-        compensada_kwh = max(injetadas) if injetadas else 0
-
-        return {
-            "documento": {
-                "arquivo": pdf.filename,
-                "tipo_unidade": tipo_unidade,
-                "chave": re.sub(r"\s+", "", ex.safe_search(r"Chave de Acesso\s*([\d\s]{40,})", raw_text) or ""),
-                "protocolo": ex.safe_search(r"Protocolo de Autorização:\s*(\d+)", raw_text)
-            },
-            "cliente": cliente,
-            "fatura": fatura,
-            "energia": {
-                "consumo_kwh": sum(m['valor_apurado'] for m in medicoes if m['tipo'] == 'CONSUMO'),
-                "geracao_mes_kwh": sum(m['valor_apurado'] for m in medicoes if m['tipo'] == 'GERACAO'),
-                "energia_compensada_kwh": compensada_kwh,
-                "saldo_creditos_kwh": scee.get("saldos", {}).get("acumulado", {}).get("tp", 0)
-            },
-            "analise_financeira_assina": {
-                "base_tarifa_liquida_kwh": t_te + t_tusd,
-                "custo_fixo_ip": valor_ip,
-                "consumo_isento_taxa": cliente['kwh_disponibilidade']
-            },
-            "tributos": tributos,
-            "historicos": {"registros": historicos},
-            "medicoes": medicoes,
-            "itens_faturados": itens,
-            "unidade": {
-                "codigo_uc": cliente['uc'],
-                "tipo_fase": cliente['tipo_fase'],
-                "regime_gd": cliente['regime_gd']
-            }
+        dados["analise_energia_solar"] = {
+            "total_consumido_kwh": cons,
+            "total_injetado_kwh": inj,
+            "percentual_abatimento": round((inj / cons) * 100, 2) if cons > 0 else 0,
+            "chave_acesso": chave
         }
+
+        return dados
+
     except Exception as e:
-        return {"error": str(e)}
-    finally:
-        if os.path.exists(temp_path): os.remove(temp_path)
+        return {"status": "erro", "detalhe": str(e)}
 
 
 if __name__ == "__main__":

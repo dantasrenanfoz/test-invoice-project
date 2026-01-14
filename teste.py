@@ -1,60 +1,78 @@
 import os
+import json
 import pdfplumber
 from extractor import CopelExtractor
 
+# Configurações
 PASTA_PDFS = r"D:\filtrado"
-PASTA_LOG = "logs_testes"
+ARQUIVO_SAIDA = "resultado_todos_pdfs.txt"
 
-os.makedirs(PASTA_LOG, exist_ok=True)
-
+# Inicializa o extrator profissional
 ex = CopelExtractor()
 
+
 def processar_pdf(caminho_pdf):
-    nome = os.path.basename(caminho_pdf)
-    log_path = os.path.join(PASTA_LOG, nome.replace(".pdf", ".txt"))
+    nome_arquivo = os.path.basename(caminho_pdf)
 
     try:
-        with pdfplumber.open(caminho_pdf) as p:
-            texto = "\n".join([page.extract_text() or "" for page in p.pages])
+        with pdfplumber.open(caminho_pdf) as pdf:
+            # Extrai texto de todas as páginas e une em uma string
+            raw_text = "\n".join([page.extract_text() or "" for page in pdf.pages])
 
-        cliente = ex.extract_cliente_info(texto)
-        fatura = ex.extract_fatura_dados(texto)
-        itens = ex.extract_itens_faturados(texto)
-        medicoes = ex.extract_medicoes(texto)
-        obs = ex.extract_observacoes(texto)
+        # MÉTODO AUTOMÁTICO: extract_all traz todos os módulos (histórico, tributos, solar, etc)
+        # Se novos campos forem adicionados no extrator, eles aparecerão aqui automaticamente.
+        dados_extraidos = ex.extract_all(raw_text)
 
-        with open(log_path, "w", encoding="utf-8") as f:
-            f.write("=== CLIENTE ===\n")
-            f.write(str(cliente) + "\n\n")
+        # Adiciona metadados do arquivo
+        resultado = {
+            "arquivo": nome_arquivo,
+            "status": "OK",
+            "dados": dados_extraidos
+        }
 
-            f.write("=== FATURA ===\n")
-            f.write(str(fatura) + "\n\n")
-
-            f.write("=== ITENS ===\n")
-            for i in itens:
-                f.write(str(i) + "\n")
-
-            f.write("\n=== MEDIÇÕES ===\n")
-            for m in medicoes:
-                f.write(str(m) + "\n")
-
-            f.write("\n=== OBSERVAÇÕES ===\n")
-            f.write(str(obs) + "\n")
-
-        print(f"✔ OK: {nome}")
+        print(f"✔ Sucesso: {nome_arquivo}")
+        return resultado
 
     except Exception as e:
-        with open(log_path, "w", encoding="utf-8") as f:
-            f.write("❌ ERRO AO PROCESSAR PDF\n")
-            f.write(str(e))
+        print(f"❌ Erro em {nome_arquivo}: {str(e)}")
+        return {
+            "arquivo": nome_arquivo,
+            "status": "ERRO",
+            "erro": str(e)
+        }
 
-        print(f"❌ ERRO: {nome} -> {e}")
 
 def main():
-    for arquivo in os.listdir(PASTA_PDFS):
-        if arquivo.lower().endswith(".pdf"):
-            caminho = os.path.join(PASTA_PDFS, arquivo)
-            processar_pdf(caminho)
+    if not os.path.exists(PASTA_PDFS):
+        print(f"Erro: A pasta {PASTA_PDFS} não existe.")
+        return
+
+    resultados = []
+
+    # Lista arquivos e processa
+    arquivos = [f for f in os.listdir(PASTA_PDFS) if f.lower().endswith(".pdf")]
+
+    if not arquivos:
+        print("Nenhum PDF encontrado na pasta.")
+        return
+
+    for arquivo in arquivos:
+        caminho = os.path.join(PASTA_PDFS, arquivo)
+        res = processar_pdf(caminho)
+        resultados.append(res)
+
+    # Gravação do arquivo de saída
+    with open(ARQUIVO_SAIDA, "w", encoding="utf-8") as f:
+        for r in resultados:
+            f.write("=================================================\n")
+            f.write(f"ARQUIVO: {r['arquivo']}\n")
+            f.write(f"STATUS : {r['status']}\n\n")
+            # ensure_ascii=False permite acentos e R$ no arquivo de texto
+            f.write(json.dumps(r.get("dados", r), ensure_ascii=False, indent=2))
+            f.write("\n\n")
+
+    print(f"\n✅ Processamento concluído! Verifique o arquivo: {ARQUIVO_SAIDA}")
+
 
 if __name__ == "__main__":
     main()
